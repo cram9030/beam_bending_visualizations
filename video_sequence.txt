@@ -1,0 +1,17 @@
+# video_sequence.txt
+# This file defines the order of scenes in the final teaching demonstration
+# Each line should contain the name of a scene (case-insensitive matching is used)
+
+# Introduction
+IntroScene
+
+# Beam types and basic concepts
+BeamTypesScene
+BeamBendingBasics
+
+# Mathematical foundation
+BeamEquationsScene
+
+# Example and application
+BeamExampleScene
+RealWorldApplications

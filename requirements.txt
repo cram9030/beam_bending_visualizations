@@ -1,0 +1,7 @@
+# requirements.txt
+manim==0.17.3
+numpy>=1.22.0
+matplotlib>=3.5.0
+scipy>=1.7.0
+pytest>=7.0.0
+black>=22.0.0  # For code formatting
