@@ -1,6 +1,6 @@
 # Beam Bending Animations
 
-This repository contains Manim animations for a 10-minute teaching demonstration on beam bending, designed for first-year engineering students at the University of Southampton (FEEG1002 module).
+This repository contains Manim animations for a 10-minute teaching demonstration on beam bending, designed for first-year engineering students.
 
 ## Project Overview
 
