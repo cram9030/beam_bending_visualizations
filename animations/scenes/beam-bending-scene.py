@@ -8,17 +8,122 @@ import math
 # Format: (x, y) points from trailing edge (1,0), around to leading edge (0,0), and back to trailing edge (1,0)
 naca_coordinates = [
     # Upper surface from TE to LE
-    (1.0000, 0.0000), (0.9500, 0.0089), (0.9000, 0.0158), (0.8000, 0.0266),
-    (0.7000, 0.0354), (0.6000, 0.0425), (0.5000, 0.0476), (0.4000, 0.0505),
-    (0.3000, 0.0507), (0.2500, 0.0495), (0.2000, 0.0473), (0.1500, 0.0439),
-    (0.1000, 0.0388), (0.0750, 0.0348), (0.0500, 0.0294), (0.0250, 0.0216),
-    (0.0125, 0.0156), (0.0000, 0.0000),
+    (1.0000, 0.0000),
+    (0.9750, 0.0044),
+    (0.9500, 0.0089),
+    (0.9250, 0.0124),
+    (0.9000, 0.0158),
+    (0.8750, 0.0187),
+    (0.8500, 0.0213),
+    (0.8000, 0.0266),
+    (0.7688, 0.0297),
+    (0.7375, 0.0326),
+    (0.7063, 0.0352),
+    (0.6750, 0.0376),
+    (0.6438, 0.0398),
+    (0.6125, 0.0417),
+    (0.5813, 0.0435),
+    (0.5500, 0.0451),
+    (0.5188, 0.0464),
+    (0.4875, 0.0476),
+    (0.4563, 0.0486),
+    (0.4250, 0.0494),
+    (0.3938, 0.0501),
+    (0.3625, 0.0505),
+    (0.3313, 0.0507),
+    (0.3000, 0.0507),
+    (0.2875, 0.0506),
+    (0.2750, 0.0503),
+    (0.2625, 0.0500),
+    (0.2500, 0.0495),
+    (0.2375, 0.0490),
+    (0.2250, 0.0484),
+    (0.2125, 0.0479),
+    (0.2000, 0.0473),
+    (0.1875, 0.0466),
+    (0.1750, 0.0458),
+    (0.1625, 0.0449),
+    (0.1500, 0.0439),
+    (0.1375, 0.0428),
+    (0.1250, 0.0416),
+    (0.1125, 0.0403),
+    (0.1000, 0.0388),
+    (0.0875, 0.0371),
+    (0.0750, 0.0348),
+    (0.0625, 0.0323),
+    (0.0500, 0.0294),
+    (0.0438, 0.0277),
+    (0.0375, 0.0258),
+    (0.0313, 0.0238),
+    (0.0250, 0.0216),
+    (0.0219, 0.0201),
+    (0.0188, 0.0186),
+    (0.0156, 0.0169),
+    (0.0125, 0.0151),
+    (0.0094, 0.0131),
+    (0.0063, 0.0107),
+    (0.0031, 0.0075),
+    (0.0016, 0.0053),
+    (0.0001, 0.0013),
+    (0.0000, 0.0000),
     # Lower surface from LE to TE
-    (0.0125, -0.0156), (0.0250, -0.0216), (0.0500, -0.0294), (0.0750, -0.0348),
-    (0.1000, -0.0388), (0.1500, -0.0439), (0.2000, -0.0473), (0.2500, -0.0495),
-    (0.3000, -0.0507), (0.4000, -0.0505), (0.5000, -0.0476), (0.6000, -0.0425),
-    (0.7000, -0.0354), (0.8000, -0.0266), (0.9000, -0.0158), (0.9500, -0.0089),
-    (1.0000, 0.0000)
+    (0.0001, -0.0013),
+    (0.0016, -0.0053),
+    (0.0031, -0.0075),
+    (0.0063, -0.0107),
+    (0.0094, -0.0131),
+    (0.0125, -0.0151),
+    (0.0156, -0.0169),
+    (0.0188, -0.0186),
+    (0.0219, -0.0201),
+    (0.0250, -0.0216),
+    (0.0313, -0.0238),
+    (0.0375, -0.0258),
+    (0.0438, -0.0277),
+    (0.0500, -0.0294),
+    (0.0625, -0.0323),
+    (0.0750, -0.0348),
+    (0.0875, -0.0371),
+    (0.1000, -0.0388),
+    (0.1125, -0.0403),
+    (0.1250, -0.0416),
+    (0.1375, -0.0428),
+    (0.1500, -0.0439),
+    (0.1625, -0.0449),
+    (0.1750, -0.0458),
+    (0.1875, -0.0466),
+    (0.2000, -0.0473),
+    (0.2125, -0.0479),
+    (0.2250, -0.0484),
+    (0.2375, -0.0490),
+    (0.2500, -0.0495),
+    (0.2625, -0.0500),
+    (0.2750, -0.0503),
+    (0.2875, -0.0506),
+    (0.3000, -0.0507),
+    (0.3313, -0.0507),
+    (0.3625, -0.0505),
+    (0.3938, -0.0501),
+    (0.4250, -0.0494),
+    (0.4563, -0.0486),
+    (0.4875, -0.0476),
+    (0.5188, -0.0464),
+    (0.5500, -0.0451),
+    (0.5813, -0.0435),
+    (0.6125, -0.0417),
+    (0.6438, -0.0398),
+    (0.6750, -0.0376),
+    (0.7063, -0.0352),
+    (0.7375, -0.0326),
+    (0.7688, -0.0297),
+    (0.8000, -0.0266),
+    (0.8500, -0.0213),
+    (0.8750, -0.0187),
+    (0.9000, -0.0158),
+    (0.9250, -0.0124),
+    (0.9500, -0.0089),
+    (0.9750, -0.0044),
+    (1.0000, 0.0000),
 ]
 
 def show_euler_bernoulli_equation(self):
@@ -52,6 +157,155 @@ def show_euler_bernoulli_equation(self):
     # Store for later reference
     self.equation = equation
     self.title = title
+
+def create_wing_from_preset_coordinates(self):
+    """Create a wing using precomputed NACA 0012 coordinates with taper and sweep."""
+    
+    # Wing parameters
+    wing_length = 4.0             # Total span
+    root_chord_length = 1.5       # Chord length at root
+    tip_chord_length = 0.75       # Chord length at tip (taper)
+    sweep_angle_deg = 30          # Sweep angle in degrees
+    sweep_reference = 0.25        # Sweep reference point along chord (0.25 = quarter chord)
+    
+    # Convert sweep angle to tangent for easier calculation
+    sweep_tan = math.tan(math.radians(sweep_angle_deg))
+    
+    # Create the wing surface by extruding the airfoil along the span
+    wing_surfaces = []
+    
+    # Number of segments along the span
+    num_span_segments = 30
+    
+    # Create a series of quadrilaterals to form the wing surface
+    for i in range(num_span_segments):
+        # Span position parameters (normalized from 0 to 1)
+        span_pos1 = i / num_span_segments
+        span_pos2 = (i + 1) / num_span_segments
+        
+        # Calculate actual span positions
+        x1 = wing_length * span_pos1
+        x2 = wing_length * span_pos2
+        
+        # Calculate chord lengths at these span positions (linear taper)
+        chord1 = root_chord_length * (1 - span_pos1) + tip_chord_length * span_pos1
+        chord2 = root_chord_length * (1 - span_pos2) + tip_chord_length * span_pos2
+        
+        # Calculate sweep offsets at these span positions
+        sweep_offset1 = x1 * sweep_tan
+        sweep_offset2 = x2 * sweep_tan
+        
+        for j in range(len(naca_coordinates) - 1):
+            # Get two consecutive airfoil coordinates
+            chord_pos1, thickness1 = naca_coordinates[j]
+            chord_pos2, thickness2 = naca_coordinates[j + 1]
+            
+            # Convert to actual positions in 3D space
+            # x is span, y is chord (with sweep), z is thickness
+            # Scale the y and z coordinates by the local chord length
+            p1 = [
+                x1, 
+                (chord_pos1 - 0.5) * chord1 + sweep_offset1, 
+                thickness1 * chord1
+            ]
+            p2 = [
+                x1, 
+                (chord_pos2 - 0.5) * chord1 + sweep_offset1, 
+                thickness2 * chord1
+            ]
+            p3 = [
+                x2, 
+                (chord_pos2 - 0.5) * chord2 + sweep_offset2, 
+                thickness2 * chord2
+            ]
+            p4 = [
+                x2, 
+                (chord_pos1 - 0.5) * chord2 + sweep_offset2, 
+                thickness1 * chord2
+            ]
+            
+            # Create a quadrilateral for this segment
+            quad = Polygon(
+                p1, p2, p3, p4,
+                fill_color=BLUE_E,
+                fill_opacity=0.8,
+                stroke_color=WHITE,
+                stroke_width=0.5,
+                stroke_opacity=0.3
+            )
+            wing_surfaces.append(quad)
+    
+    # Combine all surfaces into a single VGroup
+    wing = VGroup(*wing_surfaces)
+    
+    # Store wing parameters for later use
+    self.wing_params = {
+        "length": wing_length,
+        "root_chord": root_chord_length,
+        "tip_chord": tip_chord_length,
+        "sweep_angle_deg": sweep_angle_deg,
+        "sweep_reference": sweep_reference,
+        "sweep_tan": sweep_tan,
+        "naca_coordinates": naca_coordinates
+    }
+    
+    return wing
+
+def create_airfoil_section(x_pos, local_chord, sweep_offset, sweep_reference, naca_coordinates):
+        """Create a NACA 0012 airfoil section at position x_pos with appropriate chord length and sweep."""
+        # Convert coordinates to points in 3D space
+        points = []
+        for chord_pos, thickness in naca_coordinates:
+            
+            # Scale coordinates by local chord length and apply sweep
+            point = [
+                x_pos,  # x - span position
+                (chord_pos - 0.5) * local_chord + sweep_offset,  # y - chord position with sweep
+                thickness * local_chord  # z - thickness scaled by local chord
+            ]
+            points.append(point)
+        
+        # Create polygon from points
+        section = Polygon(
+            *points,
+            fill_color=YELLOW,
+            fill_opacity=0.6,
+            stroke_color=YELLOW_E,
+            stroke_width=2
+        )
+        
+        return section
+
+def show_cross_sections(self, wing, positions):
+    """Show cross-sections along the wing."""
+    # Positions for cross-sections - distribute evenly along span
+    
+    sections = []
+    
+    # Get wing parameters
+    wing_params = self.wing_params
+    
+    for i, x_pos in enumerate(positions):
+        # Calculate span position (normalized from 0 to 1)
+        span_pos = x_pos / wing_params["length"]
+        
+        # Calculate chord length at this span position (linear taper)
+        local_chord = wing_params["root_chord"] * (1 - span_pos) + wing_params["tip_chord"] * span_pos
+        
+        # Calculate sweep offset at this span position
+        sweep_offset = x_pos * wing_params["sweep_tan"]
+        
+        # Create a section
+        section = create_airfoil_section(x_pos, local_chord, sweep_offset, wing_params["sweep_reference"], wing_params["naca_coordinates"])
+        sections.append(section)
+        
+        # Animate
+        self.play(
+            Create(section),
+        )
+        self.wait(0.5)
+    
+    return sections
 
 class BeamBendingBasics(Scene):
     def construct(self):
@@ -441,12 +695,13 @@ class BeamSecondAreaWing(ThreeDScene):
         self.highlight_second_moment()
         
         # Step 3: Create and animate the wing
-        wing = self.create_wing_from_preset_coordinates()
+        wing = create_wing_from_preset_coordinates(self)
         self.animate_wing_creation(wing)
         
         # Step 4: Rotate to tri-iso view and show cross sections
         self.rotate_to_triso_view(wing)
-        sections = self.show_cross_sections(wing)
+        positions = [0.5, 2.0, 3.5]  # Positions along span (root, middle, tip)
+        sections = show_cross_sections(self,wing,positions)
         
         # Step 5: Move wing to right side and shrink, move sections to left
         self.rearrange_elements(wing, sections)
@@ -480,99 +735,6 @@ class BeamSecondAreaWing(ThreeDScene):
             FadeOut(label)
         )
         self.wait(0.5)
-    
-    def create_wing_from_preset_coordinates(self):
-        """Create a wing using precomputed NACA 0012 coordinates with taper and sweep."""
-        
-        # Wing parameters
-        wing_length = 4.0             # Total span
-        root_chord_length = 1.5       # Chord length at root
-        tip_chord_length = 0.75       # Chord length at tip (taper)
-        sweep_angle_deg = 30          # Sweep angle in degrees
-        sweep_reference = 0.25        # Sweep reference point along chord (0.25 = quarter chord)
-        
-        # Convert sweep angle to tangent for easier calculation
-        sweep_tan = math.tan(math.radians(sweep_angle_deg))
-        
-        # Create the wing surface by extruding the airfoil along the span
-        wing_surfaces = []
-        
-        # Number of segments along the span
-        num_span_segments = 30
-        
-        # Create a series of quadrilaterals to form the wing surface
-        for i in range(num_span_segments):
-            # Span position parameters (normalized from 0 to 1)
-            span_pos1 = i / num_span_segments
-            span_pos2 = (i + 1) / num_span_segments
-            
-            # Calculate actual span positions
-            x1 = wing_length * span_pos1
-            x2 = wing_length * span_pos2
-            
-            # Calculate chord lengths at these span positions (linear taper)
-            chord1 = root_chord_length * (1 - span_pos1) + tip_chord_length * span_pos1
-            chord2 = root_chord_length * (1 - span_pos2) + tip_chord_length * span_pos2
-            
-            # Calculate sweep offsets at these span positions
-            sweep_offset1 = x1 * sweep_tan
-            sweep_offset2 = x2 * sweep_tan
-            
-            for j in range(len(naca_coordinates) - 1):
-                # Get two consecutive airfoil coordinates
-                chord_pos1, thickness1 = naca_coordinates[j]
-                chord_pos2, thickness2 = naca_coordinates[j + 1]
-                
-                # Convert to actual positions in 3D space
-                # x is span, y is chord (with sweep), z is thickness
-                # Scale the y and z coordinates by the local chord length
-                p1 = [
-                    x1, 
-                    (chord_pos1 - 0.5) * chord1 + sweep_offset1, 
-                    thickness1 * chord1
-                ]
-                p2 = [
-                    x1, 
-                    (chord_pos2 - 0.5) * chord1 + sweep_offset1, 
-                    thickness2 * chord1
-                ]
-                p3 = [
-                    x2, 
-                    (chord_pos2 - 0.5) * chord2 + sweep_offset2, 
-                    thickness2 * chord2
-                ]
-                p4 = [
-                    x2, 
-                    (chord_pos1 - 0.5) * chord2 + sweep_offset2, 
-                    thickness1 * chord2
-                ]
-                
-                # Create a quadrilateral for this segment
-                quad = Polygon(
-                    p1, p2, p3, p4,
-                    fill_color=BLUE_E,
-                    fill_opacity=0.8,
-                    stroke_color=WHITE,
-                    stroke_width=0.5,
-                    stroke_opacity=0.3
-                )
-                wing_surfaces.append(quad)
-        
-        # Combine all surfaces into a single VGroup
-        wing = VGroup(*wing_surfaces)
-        
-        # Store wing parameters for later use
-        self.wing_params = {
-            "length": wing_length,
-            "root_chord": root_chord_length,
-            "tip_chord": tip_chord_length,
-            "sweep_angle_deg": sweep_angle_deg,
-            "sweep_reference": sweep_reference,
-            "sweep_tan": sweep_tan,
-            "naca_coordinates": naca_coordinates
-        }
-        
-        return wing
     
     def animate_wing_creation(self, wing):
         """Animate the wing creation from top view."""
@@ -615,62 +777,6 @@ class BeamSecondAreaWing(ThreeDScene):
             run_time=2
         )
         self.wait(1)
-    
-    def show_cross_sections(self, wing):
-        """Show cross-sections along the wing."""
-        # Positions for cross-sections - distribute evenly along span
-        positions = [0.5, 2.0, 3.5]  # Positions along span (root, middle, tip)
-        sections = []
-        
-        # Get wing parameters
-        wing_params = self.wing_params
-        
-        for i, x_pos in enumerate(positions):
-            # Calculate span position (normalized from 0 to 1)
-            span_pos = x_pos / wing_params["length"]
-            
-            # Calculate chord length at this span position (linear taper)
-            local_chord = wing_params["root_chord"] * (1 - span_pos) + wing_params["tip_chord"] * span_pos
-            
-            # Calculate sweep offset at this span position
-            sweep_offset = x_pos * wing_params["sweep_tan"]
-            
-            # Create a section
-            section = self.create_airfoil_section(x_pos, local_chord, sweep_offset, wing_params["sweep_reference"], wing_params["naca_coordinates"])
-            sections.append(section)
-            
-            # Animate
-            self.play(
-                Create(section),
-            )
-            self.wait(0.5)
-        
-        return sections
-    
-    def create_airfoil_section(self, x_pos, local_chord, sweep_offset, sweep_reference, naca_coordinates):
-        """Create a NACA 0012 airfoil section at position x_pos with appropriate chord length and sweep."""
-        # Convert coordinates to points in 3D space
-        points = []
-        for chord_pos, thickness in naca_coordinates:
-            
-            # Scale coordinates by local chord length and apply sweep
-            point = [
-                x_pos,  # x - span position
-                (chord_pos - 0.5) * local_chord + sweep_offset,  # y - chord position with sweep
-                thickness * local_chord  # z - thickness scaled by local chord
-            ]
-            points.append(point)
-        
-        # Create polygon from points
-        section = Polygon(
-            *points,
-            fill_color=YELLOW,
-            fill_opacity=0.6,
-            stroke_color=YELLOW_E,
-            stroke_width=2
-        )
-        
-        return section
     
     def rearrange_elements(self, wing, sections):
         """Move wing to right side, and sections to left side."""
@@ -760,8 +866,79 @@ class BeamModulousElasticity(ThreeDScene):
         # Step 2: Highlight the E(x) term and label it as Modulus of Elasticity
         self.highlight_modulus_elasticity()
 
-        # Step 3: Show the cross-section example
-        self.show_cross_section_with_tank()
+        # Step 3: Create and animate the wing
+        wing = create_wing_from_preset_coordinates(self)
+        self.animate_wing_creation(wing)
+        positions = [0.5, 3.5]  # Positions along span (root, tip)
+        sections = show_cross_sections(self,wing,positions)
+
+        # Step 4: Move wing to right side and shrink, move sections to left
+        self.shrink_move_wing(wing, sections)
+
+        # Step 4: Show the cross-section example
+        cross_section = self.create_root_cross_section()
+        self.add_fixed_in_frame_mobjects(cross_section)
+        cross_section_label = Tex("Root Cross-Section", font_size=40)
+        self.play(Indicate(sections[0], scale_factor=1.5),
+            Create(cross_section.shift(np.array([-3, 1, 0]))))
+        self.wait(0.5)
+        cross_section_label.next_to(cross_section, UP, buff=0.5)
+        self.add_fixed_in_frame_mobjects(cross_section_label)
+        self.play(Write(cross_section_label))
+        # Step 5: Show the airfoil cross-section
+        tip_section = self.create_tip_cross_section(scale_factor=1.0, num_cutouts=8)
+        self.add_fixed_in_frame_mobjects(tip_section)
+        tip_section_label = Tex("Tip Cross-Section", font_size=40)
+        self.play(Indicate(sections[1], scale_factor=1.5),
+            Create(tip_section.shift(np.array([-3, -2, 0]))))
+        tip_section_label.next_to(tip_section, UP, buff=0.5)
+        self.add_fixed_in_frame_mobjects(tip_section_label)
+        self.play(Write(tip_section_label))
+        self.wait(2)
+
+    def animate_wing_creation(self, wing):
+        """Animate the wing creation from top view."""
+        # First, fade out the equation and title
+        self.play(
+            FadeOut(self.equation),
+            FadeOut(self.title)
+        )
+        self.wait(0.5)
+        
+        # Set the camera to top view
+        self.set_camera_orientation(
+            phi=45 * DEGREES,      # Angle from positive z-axis
+            theta=-15 * DEGREES,   # Angle from positive x-axis
+            zoom=1.5,
+            frame_center=[2, 1.5, 0]
+        )
+
+        # Title for the wing
+        wing_title = Tex("Modulus of Elasticity", font_size=40)
+        self.add_fixed_in_frame_mobjects(wing_title)
+        wing_title.to_edge(UP)
+        
+        # Add the wing to the scene with creation animation
+        self.play(
+            FadeIn(wing_title),
+            Create(wing, run_time=2)
+        )
+        self.wait(1)
+        
+        # Store the title for later use
+        self.wing_title = wing_title
+
+    def shrink_move_wing(self, wing, sections):
+        """Move wing to right side, and sections to left side."""
+        
+        # Animate the sections moving to the left side
+        self.play(
+            wing.animate.scale(0.7).shift(np.array([0, 3, 0])),
+            sections[0].animate.scale(0.7).shift(np.array([0.4, 3.175, 0])),
+            sections[1].animate.scale(0.7).shift(np.array([-0.5, 2.65, 0])),
+            run_time=2
+        )
+        self.wait(1)
 
     def highlight_modulus_elasticity(self):
         """Highlight the E(x) term and label it as Modulus of Elasticity."""
@@ -862,7 +1039,7 @@ class BeamModulousElasticity(ThreeDScene):
         cross_section = VGroup()
         
         # Scale factor to adjust the size of the airfoil
-        scale_factor = 10.0
+        scale_factor = 8.0
         
         # Separate upper and lower airfoil points
         upper_points = []
@@ -900,7 +1077,7 @@ class BeamModulousElasticity(ThreeDScene):
         # Create the airfoil outline
         airfoil_outline = Polygon(
             *airfoil_points,
-            color=WHITE,
+            color=YELLOW_E,
             stroke_width=2,
             fill_opacity=0
         )
@@ -908,7 +1085,7 @@ class BeamModulousElasticity(ThreeDScene):
         
         # Create the elliptical fuel tank in the middle
         fuel_tank_width = scale_factor * 0.7
-        fuel_tank_height = scale_factor * 0.1  # Adjusted to match image
+        fuel_tank_height = scale_factor * 0.09  # Adjusted to match image
         
         fuel_tank_outline = Ellipse(
             width=fuel_tank_width,
@@ -922,10 +1099,10 @@ class BeamModulousElasticity(ThreeDScene):
         # Calculate the positions for front and rear structural supports
         # These should be vertical lines that are tangent to the tank ellipse
         front_pos = -fuel_tank_width/2  # Left edge of the tank (tangent position)
-        front_inner_pos = front_pos - scale_factor * 0.05  # Second vertical line position
+        front_inner_pos = front_pos - scale_factor * 0.01  # Second vertical line position
         
         rear_pos = fuel_tank_width/2  # Right edge of the tank (tangent position)
-        rear_inner_pos = rear_pos + scale_factor * 0.05  # Second vertical line position
+        rear_inner_pos = rear_pos + scale_factor * 0.01  # Second vertical line position
         
         # Function to find y value on airfoil at a specific x position
         def get_y_on_airfoil(x, points):
@@ -1075,7 +1252,7 @@ class BeamModulousElasticity(ThreeDScene):
         
         fluid_area = Polygon(
             *fill_points,
-            color=WHITE,
+            color=BLUE,
             stroke_width=0,  # No stroke for the fill area
             fill_color=BLUE,
             fill_opacity=0.7
@@ -1087,3 +1264,123 @@ class BeamModulousElasticity(ThreeDScene):
         cross_section.add(bottom_curve)
         
         return cross_section
+    
+    def create_tip_cross_section(self, scale_factor=1.0, num_cutouts=8):
+        """
+        Creates a 2D NACA 0012 airfoil cross-section with circular cutouts along the centerline.
+        
+        Args:
+            scale_factor: Float to scale the size of the airfoil
+            num_cutouts: Number of circular cutouts to include
+            
+        Returns:
+            VGroup containing the airfoil shape and cutouts
+        """
+        # Create a VGroup to hold all elements
+        tip_cross_section = VGroup()
+        
+        # Scale coordinates by the scale factor
+        # Chord length is 4 (from -2 to 2)
+        chord_length = 4 * scale_factor
+        
+        # Convert normalized coordinates to actual coordinates
+        # Center the airfoil at (0,0) with chord along x-axis
+        scaled_points = []
+        for x, y in naca_coordinates:
+            scaled_x = (x - 0.5) * chord_length  # Center at origin
+            scaled_y = y * chord_length  # Scale thickness
+            scaled_points.append([scaled_x, scaled_y, 0])
+        
+        # Create airfoil outline
+        airfoil = Polygon(
+            *scaled_points,
+            color=YELLOW_E,
+            fill_color=WHITE,
+            fill_opacity=0.8,
+            stroke_width=2
+        )
+        tip_cross_section.add(airfoil)
+        
+        # Calculate airfoil thickness at different chord positions
+        def get_airfoil_thickness(x_normalized):
+            """Get the total height (thickness) of the airfoil at a given normalized position"""
+            upper_y = 0
+            lower_y = 0
+            
+            # Find upper and lower y values at this x position
+            for j in range(len(naca_coordinates) - 1):
+                x1, y1 = naca_coordinates[j]
+                x2, y2 = naca_coordinates[j+1]
+                
+                # If between these two points
+                if x1 <= x_normalized <= x2 or x2 <= x_normalized <= x1:
+                    # Linear interpolation for y value
+                    if x2 != x1:  # Avoid division by zero
+                        if y1 >= 0 and y2 >= 0:  # Upper surface
+                            upper_y = y1 + (y2 - y1) * (x_normalized - x1) / (x2 - x1)
+                        elif y1 < 0 and y2 < 0:  # Lower surface
+                            lower_y = y1 + (y2 - y1) * (x_normalized - x1) / (x2 - x1)
+            
+            # Get total thickness (distance from upper to lower surface)
+            return upper_y - lower_y  # Return the full thickness
+        
+        # Starting and ending positions (normalized chord)
+        start_pos = 0.15  # 15% from leading edge
+        end_pos = 0.85    # 85% from leading edge
+        
+        cutouts = []
+        
+        # Define a consistent circle sizing ratio (relative to airfoil thickness)
+        # This will ensure all circles are properly sized relative to the airfoil thickness
+        circle_thickness_ratio = 0.7  # Circles will be 70% of local thickness
+        
+        # Calculate and position the circles
+        for i in range(num_cutouts):
+            # Distribute positions evenly from start_pos to end_pos
+            spacing = (end_pos - start_pos) / (num_cutouts)
+            x_normalized = start_pos + spacing * (i + 0.5)  # Center of each segment
+            
+            # Get thickness at this position
+            thickness = get_airfoil_thickness(x_normalized)
+            
+            # Position in actual coordinates
+            x_pos = (x_normalized - 0.5) * chord_length
+            
+            # Radius is directly proportional to the local thickness
+            radius = (thickness * chord_length * circle_thickness_ratio) / 2
+            
+            # Store the circle information for later creation
+            cutouts.append((x_pos, radius))
+        
+        # Check and adjust radii to prevent overlaps
+        for i in range(len(cutouts) - 1):
+            x1, r1 = cutouts[i]
+            x2, r2 = cutouts[i+1]
+            
+            # Distance between centers
+            distance = abs(x2 - x1)
+            
+            # If circles would overlap
+            if distance < (r1 + r2):
+                # Reduce both radii proportionally to avoid overlap
+                # with a small gap between them
+                gap = 0.02 * chord_length  # Small gap between circles
+                scale_factor = (distance - gap) / (r1 + r2)
+                
+                # Update radii
+                cutouts[i] = (x1, r1 * scale_factor)
+                cutouts[i+1] = (x2, r2 * scale_factor)
+        
+        # Add circles to the airfoil
+        for x_pos, radius in cutouts:
+            circle = Circle(
+                radius=radius,
+                color=WHITE,
+                fill_color=BLACK,  # Black fill for cutouts
+                fill_opacity=1.0,
+                stroke_width=1.5
+            )
+            circle.move_to([x_pos, 0, 0])  # Position along centerline
+            tip_cross_section.add(circle)
+        
+        return tip_cross_section
