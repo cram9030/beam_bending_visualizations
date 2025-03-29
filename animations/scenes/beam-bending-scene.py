@@ -3,6 +3,56 @@ from manim import *
 import numpy as np
 import math
 
+# Precise NACA 0012 coordinates (x, y) where x is along chord, y is thickness
+# These are normalized coordinates (0-1 for x, calculated based on NACA formula for y)
+# Format: (x, y) points from trailing edge (1,0), around to leading edge (0,0), and back to trailing edge (1,0)
+naca_coordinates = [
+    # Upper surface from TE to LE
+    (1.0000, 0.0000), (0.9500, 0.0089), (0.9000, 0.0158), (0.8000, 0.0266),
+    (0.7000, 0.0354), (0.6000, 0.0425), (0.5000, 0.0476), (0.4000, 0.0505),
+    (0.3000, 0.0507), (0.2500, 0.0495), (0.2000, 0.0473), (0.1500, 0.0439),
+    (0.1000, 0.0388), (0.0750, 0.0348), (0.0500, 0.0294), (0.0250, 0.0216),
+    (0.0125, 0.0156), (0.0000, 0.0000),
+    # Lower surface from LE to TE
+    (0.0125, -0.0156), (0.0250, -0.0216), (0.0500, -0.0294), (0.0750, -0.0348),
+    (0.1000, -0.0388), (0.1500, -0.0439), (0.2000, -0.0473), (0.2500, -0.0495),
+    (0.3000, -0.0507), (0.4000, -0.0505), (0.5000, -0.0476), (0.6000, -0.0425),
+    (0.7000, -0.0354), (0.8000, -0.0266), (0.9000, -0.0158), (0.9500, -0.0089),
+    (1.0000, 0.0000)
+]
+
+def show_euler_bernoulli_equation(self):
+    """Show the Euler-Bernoulli beam equation."""
+    # Title
+    title = Tex(r"Static Euler-Bernoulli Beam Equation", font_size=48)
+    title.to_edge(UP)
+    
+    # Equation
+    equation = MathTex(
+        r"\frac{d^2}{dx}", 
+        r"\left(", 
+        r"E(x)", 
+        r"I(x)", 
+        r"\frac{d^2w}{dx^2}", 
+        r"\right)", 
+        r"=", 
+        r"q(x)",
+        font_size=48
+    )
+    
+    # Position equation
+    equation.next_to(title, DOWN, buff=1)
+    
+    # Animate
+    self.play(Write(title))
+    self.wait(0.5)
+    self.play(Write(equation))
+    self.wait(1)
+    
+    # Store for later reference
+    self.equation = equation
+    self.title = title
+
 class BeamBendingBasics(Scene):
     def construct(self):
         # Title
@@ -385,9 +435,9 @@ class BeamEquationsScene(Scene):
 class BeamSecondAreaWing(ThreeDScene):
     def construct(self):
         # Step 1: Start with Euler-Bernoulli equation
-        self.show_euler_bernoulli_equation()
+        show_euler_bernoulli_equation(self)
         
-        # Step 2: Highlight the Second Moment Area term
+        # Step 2: Highlight the Second Moment of Area term
         self.highlight_second_moment()
         
         # Step 3: Create and animate the wing
@@ -404,40 +454,8 @@ class BeamSecondAreaWing(ThreeDScene):
         # Step 6: Fade out wing and show the integral equation
         self.show_final_equation(wing)
     
-    def show_euler_bernoulli_equation(self):
-        """Show the Euler-Bernoulli beam equation."""
-        # Title
-        title = Tex(r"Static Euler-Bernoulli Beam Equation", font_size=48)
-        title.to_edge(UP)
-        
-        # Equation
-        equation = MathTex(
-            r"\frac{d^2}{dx}", 
-            r"\left(", 
-            r"E(x)", 
-            r"I(x)", 
-            r"\frac{d^2w}{dx^2}", 
-            r"\right)", 
-            r"=", 
-            r"q(x)",
-            font_size=48
-        )
-        
-        # Position equation
-        equation.next_to(title, DOWN, buff=1)
-        
-        # Animate
-        self.play(Write(title))
-        self.wait(0.5)
-        self.play(Write(equation))
-        self.wait(1)
-        
-        # Store for later reference
-        self.equation = equation
-        self.title = title
-    
     def highlight_second_moment(self):
-        """Highlight the I(x) term and label it as the Second Moment Area."""
+        """Highlight the I(x) term and label it as the Second Moment of Area."""
         # Get the I(x) part from the equation
         i_term = self.equation[3]  # This is the "I(x)" part
         
@@ -445,7 +463,7 @@ class BeamSecondAreaWing(ThreeDScene):
         bracket = Brace(i_term, direction=DOWN, color=YELLOW)
         
         # Create a label for the bracket
-        label = Tex("Second Moment Area", color=YELLOW)
+        label = Tex("Second Moment of Area", color=YELLOW)
         label.next_to(bracket, DOWN)
         
         # Animate
@@ -465,23 +483,6 @@ class BeamSecondAreaWing(ThreeDScene):
     
     def create_wing_from_preset_coordinates(self):
         """Create a wing using precomputed NACA 0012 coordinates with taper and sweep."""
-        # Precise NACA 0012 coordinates (x, y) where x is along chord, y is thickness
-        # These are normalized coordinates (0-1 for x, calculated based on NACA formula for y)
-        # Format: (x, y) points from trailing edge (1,0), around to leading edge (0,0), and back to trailing edge (1,0)
-        naca_coordinates = [
-            # Upper surface from TE to LE
-            (1.0000, 0.0000), (0.9500, 0.0089), (0.9000, 0.0158), (0.8000, 0.0266),
-            (0.7000, 0.0354), (0.6000, 0.0425), (0.5000, 0.0476), (0.4000, 0.0505),
-            (0.3000, 0.0507), (0.2500, 0.0495), (0.2000, 0.0473), (0.1500, 0.0439),
-            (0.1000, 0.0388), (0.0750, 0.0348), (0.0500, 0.0294), (0.0250, 0.0216),
-            (0.0125, 0.0156), (0.0000, 0.0000),
-            # Lower surface from LE to TE
-            (0.0125, -0.0156), (0.0250, -0.0216), (0.0500, -0.0294), (0.0750, -0.0348),
-            (0.1000, -0.0388), (0.1500, -0.0439), (0.2000, -0.0473), (0.2500, -0.0495),
-            (0.3000, -0.0507), (0.4000, -0.0505), (0.5000, -0.0476), (0.6000, -0.0425),
-            (0.7000, -0.0354), (0.8000, -0.0266), (0.9000, -0.0158), (0.9500, -0.0089),
-            (1.0000, 0.0000)
-        ]
         
         # Wing parameters
         wing_length = 4.0             # Total span
@@ -591,7 +592,7 @@ class BeamSecondAreaWing(ThreeDScene):
         )
 
         # Title for the wing
-        wing_title = Tex("Second Moment Area", font_size=40)
+        wing_title = Tex("Second Moment of Area", font_size=40)
         self.add_fixed_in_frame_mobjects(wing_title)
         wing_title.to_edge(UP)
         
@@ -720,7 +721,7 @@ class BeamSecondAreaWing(ThreeDScene):
         integral_eq = MathTex(r"I(x) = \int \int z^2 dy dz", font_size=40)
         
         # Create explanatory text
-        explanation = Tex("Second Moment can change with the beam.", font_size=32)
+        explanation = Tex("Second Moment of Area can change with the beam.", font_size=32)
         
         # Add elements to group and arrange vertically
         equation_group.add(equation,integral_eq, explanation)
@@ -738,7 +739,7 @@ class BeamSecondAreaWing(ThreeDScene):
         bracket = Brace(i_term, direction=DOWN, color=YELLOW)
         
         # Create a label for the bracket
-        label = Tex("Second Moment Area", color=YELLOW)
+        label = Tex("Second Moment of Area", color=YELLOW)
         label.next_to(bracket, DOWN)
         self.play(i_term.animate.set_color(YELLOW))
         self.add_fixed_in_frame_mobjects(bracket, label)
@@ -750,3 +751,339 @@ class BeamSecondAreaWing(ThreeDScene):
         
         # Return the group in case you need to reference it later
         return equation_group
+    
+class BeamModulousElasticity(ThreeDScene):
+    def construct(self):
+        # Step 1: Start with Euler-Bernoulli equation
+        show_euler_bernoulli_equation(self)
+        
+        # Step 2: Highlight the E(x) term and label it as Modulus of Elasticity
+        self.highlight_modulus_elasticity()
+
+        # Step 3: Show the cross-section example
+        self.show_cross_section_with_tank()
+
+    def highlight_modulus_elasticity(self):
+        """Highlight the E(x) term and label it as Modulus of Elasticity."""
+        # Get the E(x) part from the equation
+        e_term = self.equation[2]  # This is the "E(x)" part
+        # Create a bracket under the E(x) term
+        bracket = Brace(e_term, direction=DOWN, color=YELLOW)
+        # Create a label for the bracket
+        label = Tex("Modulus of Elasticity", color=YELLOW)
+        label.next_to(bracket, DOWN)
+        # Animate
+        self.play(
+            e_term.animate.set_color(YELLOW),
+            GrowFromCenter(bracket),
+            Write(label)
+        )
+        self.wait(1)
+        # Fade out everything except the equation and title
+        self.play(
+            FadeOut(bracket),
+            FadeOut(label)
+        )
+        self.wait(0.5)
+
+    def airfoil_cross_section_demonstration(self):
+        """Just demonstrate the airfoil cross-section."""
+        # Set camera orientation for better viewing
+        self.set_camera_orientation(phi=0, theta=-90 * DEGREES)
+        
+        # Create cross-section
+        cross_section = self.create_root_cross_section()
+        
+        # Add a title
+        title = Tex("NACA 0012 Airfoil Cross-Section with Fuel Tank")
+        title.to_edge(UP)
+        self.add_fixed_in_frame_mobjects(title)
+        
+        # Animate the creation of the cross-section
+        self.play(
+            Write(title),
+            Create(cross_section),
+            run_time=2
+        )
+        self.wait(1)
+        
+        # Optional: rotate to show perspective
+        self.play(
+            cross_section.animate.rotate(20 * DEGREES, axis=RIGHT),
+            run_time=2
+        )
+        self.wait(1)
+        
+        # Optional: zoom in to show details
+        self.play(
+            cross_section.animate.scale(1.2),
+            run_time=1.5
+        )
+        self.wait(2)
+    
+    def show_cross_section_with_tank(self):
+        """Transition from equation to airfoil cross-section."""
+        # Fade out equation and title
+        self.play(
+            FadeOut(self.equation),
+            FadeOut(self.title)
+        )
+        self.wait(0.5)
+        
+        # Create and show cross-section
+        cross_section = self.create_root_cross_section()
+        
+        # Add a new title
+        new_title = Tex("Varying Modulus of Elasticity in Wing Structure")
+        new_title.to_edge(UP)
+        self.add_fixed_in_frame_mobjects(new_title)
+        
+        # Show the cross-section
+        self.play(
+            Write(new_title),
+            Create(cross_section),
+            run_time=2.5
+        )
+        self.wait(1)
+        
+        # Add an explanation about material variations
+        explanation = Tex("Different materials affect the stiffness of the wing structure")
+        explanation.next_to(new_title, DOWN)
+        self.add_fixed_in_frame_mobjects(explanation)
+        self.play(Write(explanation))
+        self.wait(2)
+            
+    def create_root_cross_section(self):
+        """
+        Creates a cross-section of a NACA 0012 airfoil with a fuel tank and structural supports.
+        Returns the cross-section as a VGroup for further manipulation.
+        """
+        # Create a VGroup to hold all elements of the cross-section
+        cross_section = VGroup()
+        
+        # Scale factor to adjust the size of the airfoil
+        scale_factor = 10.0
+        
+        # Separate upper and lower airfoil points
+        upper_points = []
+        lower_points = []
+        leading_edge_index = None
+        
+        # First pass: identify the leading edge (point with x=0.0, y=0.0)
+        for i, (chord_pos, thickness) in enumerate(naca_coordinates):
+            if chord_pos == 0.0 and thickness == 0.0:
+                leading_edge_index = i
+                break
+        
+        if leading_edge_index is None:
+            # Fallback if exact 0,0 not found
+            leading_edge_index = len(naca_coordinates) // 2
+        
+        # Second pass: separate points
+        for i, (chord_pos, thickness) in enumerate(naca_coordinates):
+            # Scale coordinates
+            x = (chord_pos - 0.5) * scale_factor
+            y = thickness * scale_factor
+            
+            if i <= leading_edge_index:
+                # Points from trailing edge to leading edge (upper surface)
+                upper_points.append(np.array([x, y, 0]))
+            else:
+                # Points from leading edge to trailing edge (lower surface)
+                lower_points.append(np.array([x, y, 0]))
+        
+        # Complete airfoil outline (all points in order)
+        airfoil_points = []
+        airfoil_points.extend(upper_points)
+        airfoil_points.extend(lower_points)
+        
+        # Create the airfoil outline
+        airfoil_outline = Polygon(
+            *airfoil_points,
+            color=WHITE,
+            stroke_width=2,
+            fill_opacity=0
+        )
+        cross_section.add(airfoil_outline)
+        
+        # Create the elliptical fuel tank in the middle
+        fuel_tank_width = scale_factor * 0.7
+        fuel_tank_height = scale_factor * 0.1  # Adjusted to match image
+        
+        fuel_tank_outline = Ellipse(
+            width=fuel_tank_width,
+            height=fuel_tank_height,
+            color=WHITE,
+            stroke_width=1.5,
+            fill_opacity=0
+        )
+        cross_section.add(fuel_tank_outline)
+        
+        # Calculate the positions for front and rear structural supports
+        # These should be vertical lines that are tangent to the tank ellipse
+        front_pos = -fuel_tank_width/2  # Left edge of the tank (tangent position)
+        front_inner_pos = front_pos - scale_factor * 0.05  # Second vertical line position
+        
+        rear_pos = fuel_tank_width/2  # Right edge of the tank (tangent position)
+        rear_inner_pos = rear_pos + scale_factor * 0.05  # Second vertical line position
+        
+        # Function to find y value on airfoil at a specific x position
+        def get_y_on_airfoil(x, points):
+            # Find the two points that x falls between and interpolate
+            for i in range(len(points) - 1):
+                x1, y1 = points[i][0], points[i][1]  # First point
+                x2, y2 = points[i+1][0], points[i+1][1]  # Next point
+                
+                # If x is between these two points
+                if (x1 <= x <= x2) or (x2 <= x <= x1):
+                    # Linear interpolation
+                    if x2 == x1:  # Avoid division by zero
+                        return y1
+                    t = (x - x1) / (x2 - x1)
+                    y = y1 + t * (y2 - y1)
+                    return y
+            
+            # If not found, return the y of the closest point
+            return points[0][1]  # Default fallback
+        
+        # Create front structural support (filled polygon)
+        # Find where the vertical lines intersect the airfoil surface
+        front_top_y = get_y_on_airfoil(front_pos, upper_points)
+        front_inner_top_y = get_y_on_airfoil(front_inner_pos, upper_points)
+        
+        front_bottom_y = get_y_on_airfoil(front_pos, lower_points)
+        front_inner_bottom_y = get_y_on_airfoil(front_inner_pos, lower_points)
+        
+        # Create polygon for front support
+        front_support = Polygon(
+            np.array([front_pos, front_top_y, 0]),
+            np.array([front_inner_pos, front_inner_top_y, 0]),
+            np.array([front_inner_pos, front_inner_bottom_y, 0]),
+            np.array([front_pos, front_bottom_y, 0]),
+            color=WHITE,
+            stroke_width=1.5,
+            fill_color=WHITE,
+            fill_opacity=1.0
+        )
+        
+        # Create front vertical lines more explicitly to ensure they're visible
+        front_line1 = Line(
+            start=np.array([front_pos, front_top_y, 0]),
+            end=np.array([front_pos, front_bottom_y, 0]),
+            color=WHITE,
+            stroke_width=1.5
+        )
+        
+        front_line2 = Line(
+            start=np.array([front_inner_pos, front_inner_top_y, 0]),
+            end=np.array([front_inner_pos, front_inner_bottom_y, 0]),
+            color=WHITE,
+            stroke_width=1.5
+        )
+        
+        # Create rear structural support (filled polygon)
+        rear_top_y = get_y_on_airfoil(rear_pos, upper_points)
+        rear_inner_top_y = get_y_on_airfoil(rear_inner_pos, upper_points)
+        
+        rear_bottom_y = get_y_on_airfoil(rear_pos, lower_points)
+        rear_inner_bottom_y = get_y_on_airfoil(rear_inner_pos, lower_points)
+        
+        # Create polygon for rear support
+        rear_support = Polygon(
+            np.array([rear_pos, rear_top_y, 0]),
+            np.array([rear_inner_pos, rear_inner_top_y, 0]),
+            np.array([rear_inner_pos, rear_inner_bottom_y, 0]),
+            np.array([rear_pos, rear_bottom_y, 0]),
+            color=WHITE,
+            stroke_width=1.5,
+            fill_color=WHITE,
+            fill_opacity=1.0
+        )
+        
+        # Create rear vertical lines more explicitly to ensure they're visible
+        rear_line1 = Line(
+            start=np.array([rear_pos, rear_top_y, 0]),
+            end=np.array([rear_pos, rear_bottom_y, 0]),
+            color=WHITE,
+            stroke_width=1.5
+        )
+        
+        rear_line2 = Line(
+            start=np.array([rear_inner_pos, rear_inner_top_y, 0]),
+            end=np.array([rear_inner_pos, rear_inner_bottom_y, 0]),
+            color=WHITE,
+            stroke_width=1.5
+        )
+        
+        # Add structural supports to cross-section
+        cross_section.add(front_support, front_line1, front_line2)
+        cross_section.add(rear_support, rear_line1, rear_line2)
+        
+        # Create the wave pattern for the top of the fluid
+        num_waves = 22
+        wave_amplitude = fuel_tank_height * 0.08  # Reduced amplitude
+        
+        # Create a wave that's fully inscribed within the ellipse
+        wave_points = []
+        bottom_points = []
+        
+        # Calculate ellipse points to ensure waves stay inside the tank
+        for i in range(100):  # More points for smoother wave
+            # Parametric t from -π/2 to π/2 (left to right of ellipse)
+            t_range = np.linspace(-np.pi/2, np.pi/2, 100)
+            t = t_range[i]
+            
+            # Calculate x coordinate along the ellipse
+            x = (fuel_tank_width/2) * np.sin(t)
+            
+            # Calculate upper boundary of ellipse at this x
+            y_ellipse = (fuel_tank_height/2) * np.cos(t)
+            
+            # Calculate wave height - FIXED to stay inside ellipse
+            # Use a smaller percentage of the ellipse height for the wave
+            base_y = y_ellipse * 0.6  # Base wave position (60% of ellipse height)
+            max_wave_height = y_ellipse * 0.9  # Maximum wave height (90% of ellipse height)
+            
+            phase = num_waves * np.pi * (t + np.pi/2) / np.pi
+            # Ensure wave never exceeds ellipse boundary
+            wave_y = min(max_wave_height, base_y + wave_amplitude * np.sin(phase))
+            
+            # For bottom, we'll use the ellipse shape
+            bottom_y = -y_ellipse
+            
+            wave_points.append(np.array([x, wave_y, 0]))
+            bottom_points.append(np.array([x, bottom_y, 0]))
+        
+        # Create the wave curve
+        wave_curve = VMobject(
+            color=WHITE,
+            stroke_width=1.5
+        )
+        wave_curve.set_points_as_corners(wave_points)
+        
+        # Create the bottom curve (follows ellipse shape)
+        bottom_curve = VMobject(
+            color=WHITE,
+            stroke_width=1.5
+        )
+        bottom_curve.set_points_as_corners(bottom_points)
+        
+        # Create a polygon for the blue fill area (combine wave and bottom curves)
+        fill_points = []
+        fill_points.extend(wave_points)
+        fill_points.extend(bottom_points[::-1])  # Reverse the bottom points for correct polygon
+        
+        fluid_area = Polygon(
+            *fill_points,
+            color=WHITE,
+            stroke_width=0,  # No stroke for the fill area
+            fill_color=BLUE,
+            fill_opacity=0.7
+        )
+        
+        # Add the filled area first, then the wave curve on top
+        cross_section.add(fluid_area)
+        cross_section.add(wave_curve)
+        cross_section.add(bottom_curve)
+        
+        return cross_section
