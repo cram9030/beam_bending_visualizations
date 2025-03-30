@@ -350,7 +350,7 @@ class BeamBendingBasics(Scene):
         curved_beam.set_points_as_corners(curved_points)
         
         self.play(
-            ReplacementTransform(beam, curved_beam),
+            FadeTransform(beam, curved_beam),
             FadeOut(straight_label)
         )
         self.wait(1)
@@ -623,8 +623,8 @@ class BeamEquationsScene(Scene):
         # Transition beam from straight to deformed 
         # and simultaneously fade out the coordinate direction text and arrow
         self.play(
-            ReplacementTransform(straight_beam, deformed_beam),
-            ReplacementTransform(neutral_axis, deformed_neutral),
+            FadeTransform(straight_beam, deformed_beam),
+            FadeTransform(neutral_axis, deformed_neutral),
             FadeIn(dotted_beam),
             FadeIn(dotted_neutral),
             FadeOut(coord_direction),
@@ -1384,3 +1384,525 @@ class BeamModulousElasticity(ThreeDScene):
             tip_cross_section.add(circle)
         
         return tip_cross_section
+
+# animations/scenes/beam_distributed_load.py
+from manim import *
+import numpy as np
+
+def show_euler_bernoulli_equation(self):
+    """Show the Euler-Bernoulli beam equation."""
+    # Title
+    title = Tex(r"Static Euler-Bernoulli Beam Equation", font_size=48)
+    title.to_edge(UP)
+    
+    # Equation
+    equation = MathTex(
+        r"\frac{d^2}{dx}", 
+        r"\left(", 
+        r"E(x)", 
+        r"I(x)", 
+        r"\frac{d^2w}{dx^2}", 
+        r"\right)", 
+        r"=", 
+        r"q(x)",
+        font_size=48
+    )
+    
+    # Position equation
+    equation.next_to(title, DOWN, buff=1)
+    
+    # Animate
+    self.play(Write(title))
+    self.wait(0.5)
+    self.play(Write(equation))
+    self.wait(1)
+    
+    # Store for later reference
+    self.equation = equation
+    self.title = title
+
+class BeamDistributedLoad(Scene):
+    def construct(self):
+        # --------- STEP 1: Title and equation first ---------
+        show_euler_bernoulli_equation(self)
+        
+        # --------- STEP 2: Highlight q(x) term ---------
+        # Get the q(x) part from the equation
+        q_term = self.equation[-1]  # This is the "q(x)" part
+        
+        # Create a bracket under the q(x) term
+        bracket = Brace(q_term, direction=DOWN, color=RED)
+        
+        # Create a label for the bracket
+        label = Tex("Distributed Load", color=RED)
+        label.next_to(bracket, DOWN)
+        
+        # Animate highlighting the q(x) term
+        self.play(
+            q_term.animate.set_color(RED),
+            GrowFromCenter(bracket),
+            Write(label)
+        )
+        self.wait(1)
+        
+        # --------- STEP 3: Create beam ---------
+        # Beam dimensions and position
+        beam_length = 9
+        beam_height = 0.8
+        beam_center_y = -1  # Center of beam vertically on screen
+        
+        # Determine beam endpoints
+        beam_left = -6  # Left edge of beam
+        beam_right = beam_left + beam_length
+        
+        # Create fixed support at left end
+        fixed_support = Rectangle(
+            height=beam_height + 0.5,
+            width=0.8,
+            fill_color=BLUE,
+            fill_opacity=0.8,
+            color=BLUE,
+            stroke_width=2
+        )
+        fixed_support.move_to([beam_left - 0.4, beam_center_y, 0])
+        
+        # Initial straight beam
+        straight_beam = Rectangle(
+            height=beam_height,
+            width=beam_length,
+            fill_color=WHITE,
+            fill_opacity=0.0,
+            color=WHITE,
+            stroke_width=2.5
+        )
+        straight_beam.move_to([beam_left + beam_length/2, beam_center_y, 0])
+        
+        # Initial neutral axis - solid yellow
+        neutral_axis = Line(
+            start=[beam_left, beam_center_y, 0],
+            end=[beam_right, beam_center_y, 0],
+            color=YELLOW,
+            stroke_width=3
+        )
+        
+        # Show fixed support and beam with neutral axis
+        self.play(
+            Create(fixed_support),
+            Create(straight_beam),
+            Create(neutral_axis)
+        )
+        self.wait(1)
+        # Fade out the title and equation
+        self.play(
+            FadeOut(self.title),
+            FadeOut(self.equation),
+            FadeOut(label),
+            FadeOut(bracket)
+        )
+        self.wait(0.5)
+        
+        # --------- STEP 4: Load Case 1 - Uniform Load ---------
+        case1_title = Tex("Case 1: Uniform Load", color=RED, font_size=36)
+        case1_title.to_edge(UP)  # Move to center top
+        self.play(Write(case1_title))
+        
+        # Create uniform load arrows
+        uniform_arrows = VGroup()
+        num_arrows = 12
+        arrow_length = 1
+        
+        for i in range(num_arrows):
+            x_pos = beam_left + beam_length * (i + 0.5) / num_arrows
+            arrow = Arrow(
+                start=[x_pos, beam_center_y + beam_height/2 + arrow_length, 0],
+                end=[x_pos, beam_center_y + beam_height/2, 0],
+                buff=0,
+                color=RED,
+                stroke_width=2,
+                max_tip_length_to_length_ratio=0.15
+            )
+            uniform_arrows.add(arrow)
+        
+        # Add a bracket above arrows with q label
+        load_bracket = Brace(uniform_arrows, direction=UP, color=RED)
+        load_label = MathTex("q(x) = q_0", color=RED)  # Changed to show constant load
+        load_label.next_to(load_bracket, UP)
+        
+        # Show the uniform load
+        self.play(
+            Create(uniform_arrows),
+            Create(load_bracket),
+            Write(load_label)
+        )
+        self.wait(1)
+        
+        # Create deflection curve for uniform load
+        # For a cantilever beam with uniform load, deflection is:
+        # w(x) = -q*x^2*(6*L^2 - 4*L*x + x^2)/(24*E*I)
+        def get_uniform_load_curve():
+            points = []
+            num_points = 100
+            
+            for i in range(num_points + 1):
+                x_ratio = i / num_points
+                x = beam_left + x_ratio * beam_length
+                
+                # Normalized deflection equation for uniform load
+                # Maximum deflection occurs at free end: w_max = -qL⁴/(8EI)
+                L = beam_length
+                rel_x = x_ratio * L
+                # Increased the magnitude of deflection by 1.5 times
+                deflection = -1.8 * (rel_x**2) * (6*L**2 - 4*L*rel_x + rel_x**2) / (24*L**4)
+                y = beam_center_y + 2*deflection
+                
+                points.append([x, y, 0])
+            
+            return points
+        
+        # Create deflected beam
+        uniform_points = get_uniform_load_curve()
+        
+        # Create deflected neutral axis
+        deflected_neutral = VMobject(color=YELLOW, stroke_width=3)
+        deflected_neutral.set_points_as_corners(uniform_points)
+        
+        # Create deflected beam (top and bottom curves)
+        top_points = []
+        bottom_points = []
+        
+        for point in uniform_points:
+            top_points.append([point[0], point[1] + beam_height/2, 0])
+            bottom_points.append([point[0], point[1] - beam_height/2, 0])
+        
+        # Add the right end of the beam
+        right_end = Line(
+            start=top_points[-1],
+            end=bottom_points[-1],
+            color=WHITE,
+            stroke_width=2.5
+        )
+        
+        # Create deflected beam curves
+        top_curve = VMobject(color=WHITE, stroke_width=2.5)
+        top_curve.set_points_as_corners(top_points)
+        
+        bottom_curve = VMobject(color=WHITE, stroke_width=2.5)
+        bottom_curve.set_points_as_corners(bottom_points)
+        
+        deflected_beam = VGroup(top_curve, bottom_curve, right_end)
+        
+        # Animate the deflection
+        self.play(
+            FadeTransform(neutral_axis, deflected_neutral),
+            FadeTransform(straight_beam, deflected_beam)
+        )
+        self.wait(2)
+        
+        # --------- STEP 5: Transition back to straight beam ---------
+        # First, restore the original beam
+        self.play(
+            FadeOut(uniform_arrows),
+            FadeOut(load_bracket),
+            FadeOut(load_label),
+            FadeOut(case1_title),
+        )
+        
+        # Now animate back to the straight beam
+        straight_neutral = Line(
+            start=[beam_left, beam_center_y, 0],
+            end=[beam_right, beam_center_y, 0],
+            color=YELLOW,
+            stroke_width=3
+        )
+        
+        new_straight_beam = Rectangle(
+            height=beam_height,
+            width=beam_length,
+            fill_color=WHITE,
+            fill_opacity=0.0,
+            color=WHITE,
+            stroke_width=2.5
+        )
+        new_straight_beam.move_to([beam_left + beam_length/2, beam_center_y, 0])
+        
+        self.play(
+            FadeTransform(deflected_neutral, straight_neutral),
+            FadeTransform(deflected_beam, new_straight_beam)
+        )
+        self.wait(1)
+        
+        # --------- STEP 6: Load Case 2 - Concentrated Middle Load ---------
+        case2_title = Tex("Case 2: Concentrated Middle Load", color=RED, font_size=36)
+        case2_title.to_edge(UP)  # Move to center top
+        self.play(Write(case2_title))
+        
+        # Create concentrated load arrows (only in the middle section)
+        middle_arrows = VGroup()
+        num_arrows = 6
+        arrow_length = 1.2
+        
+        # Middle section spans 30% of beam centered in the middle
+        middle_start = beam_left + beam_length * 0.35
+        middle_end = beam_left + beam_length * 0.65
+        
+        for i in range(num_arrows):
+            x_pos = middle_start + (middle_end - middle_start) * (i + 0.5) / num_arrows
+            arrow = Arrow(
+                start=[x_pos, beam_center_y + beam_height/2 + arrow_length, 0],
+                end=[x_pos, beam_center_y + beam_height/2, 0],
+                buff=0,
+                color=RED,
+                stroke_width=2,
+                max_tip_length_to_length_ratio=0.15
+            )
+            middle_arrows.add(arrow)
+        
+        # Add a bracket above arrows with q(x) label
+        middle_bracket = Brace(middle_arrows, direction=UP, color=RED)
+        middle_label = MathTex("q(x)", color=RED)
+        middle_label.next_to(middle_bracket, UP)
+        
+        # Show the middle load
+        self.play(
+            Create(middle_arrows),
+            Create(middle_bracket),
+            Write(middle_label)
+        )
+        self.wait(1)
+        
+        # Create deflection curve for concentrated middle load
+        def get_middle_load_curve():
+            points = []
+            num_points = 100
+            
+            for i in range(num_points + 1):
+                x_ratio = i / num_points
+                x = beam_left + x_ratio * beam_length
+                
+                # Approximate deflection for a middle-loaded beam
+                # Different equations for different sections
+                L = beam_length
+                a = 0.35 * L  # Start of loaded region
+                b = 0.65 * L  # End of loaded region
+                rel_x = x_ratio * L
+                
+                # Simplified approximation of deflection (reduced by factor of 0.7)
+                if rel_x <= a:
+                    # Before the load: cubic deflection
+                    deflection = -0.7 * (rel_x/a)**3
+                elif rel_x <= b:
+                    # Under the load: modified curve
+                    ratio = (rel_x - a)/(b - a)
+                    deflection = -0.7 - 0.35 * ratio**2
+                else:
+                    # After the load: smooth transition to end
+                    ratio = (rel_x - b)/(L - b)
+                    deflection = -1.05 - 0.35 * ratio + 0.35 * ratio**2
+                
+                # Scale the deflection
+                deflection *= 0.8
+                
+                y = beam_center_y + deflection
+                points.append([x, y, 0])
+            
+            return points
+        
+        # Create deflected beam for the middle load
+        middle_points = get_middle_load_curve()
+        
+        # Create deflected neutral axis
+        middle_deflected_neutral = VMobject(color=YELLOW, stroke_width=3)
+        middle_deflected_neutral.set_points_as_corners(middle_points)
+        
+        # Create deflected beam (top and bottom curves)
+        middle_top_points = []
+        middle_bottom_points = []
+        
+        for point in middle_points:
+            middle_top_points.append([point[0], point[1] + beam_height/2, 0])
+            middle_bottom_points.append([point[0], point[1] - beam_height/2, 0])
+        
+        # Add the right end of the beam
+        middle_right_end = Line(
+            start=middle_top_points[-1],
+            end=middle_bottom_points[-1],
+            color=WHITE,
+            stroke_width=2.5
+        )
+        
+        # Create deflected beam curves
+        middle_top_curve = VMobject(color=WHITE, stroke_width=2.5)
+        middle_top_curve.set_points_as_corners(middle_top_points)
+        
+        middle_bottom_curve = VMobject(color=WHITE, stroke_width=2.5)
+        middle_bottom_curve.set_points_as_corners(middle_bottom_points)
+        
+        middle_deflected_beam = VGroup(middle_top_curve, middle_bottom_curve, middle_right_end)
+        
+        # Mathematical explanation
+        middle_math = MathTex(
+            r"q(x) = \begin{cases} 0 & x < a \\ q_0 & a \leq x \leq b \\ 0 & x > b \end{cases}",
+            font_size=32
+        )
+        middle_math.next_to(case2_title, DOWN, buff=0.5).shift(RIGHT * 2)
+        
+        # Animate the deflection
+        self.play(Write(middle_math))
+        self.play(
+            FadeTransform(straight_neutral, middle_deflected_neutral),
+            FadeTransform(new_straight_beam, middle_deflected_beam)
+        )
+        self.wait(2)
+        
+        # --------- STEP 7: Transition back to straight beam again ---------
+        # Remove previous load and restore straight beam
+        self.play(
+            FadeOut(middle_arrows),
+            FadeOut(middle_bracket),
+            FadeOut(middle_label),
+            FadeOut(middle_math),
+            FadeOut(case2_title),
+        )
+        
+        # Create fresh straight beam components
+        another_straight_neutral = Line(
+            start=[beam_left, beam_center_y, 0],
+            end=[beam_right, beam_center_y, 0],
+            color=YELLOW,
+            stroke_width=3
+        )
+        
+        another_straight_beam = Rectangle(
+            height=beam_height,
+            width=beam_length,
+            fill_color=WHITE,
+            fill_opacity=0.0,
+            color=WHITE,
+            stroke_width=2.5
+        )
+        another_straight_beam.move_to([beam_left + beam_length/2, beam_center_y, 0])
+        
+        self.play(
+            FadeTransform(middle_deflected_neutral, another_straight_neutral),
+            FadeTransform(middle_deflected_beam, another_straight_beam)
+        )
+        self.wait(1)
+        
+        # --------- STEP 8: Load Case 3 - Wind Lifting Distribution ---------
+        case3_title = Tex("Case 3: Wind Lifting Distribution", color=RED, font_size=36)
+        case3_title.to_edge(UP)  # Move to center top
+        self.play(Write(case3_title))
+        
+        # Create wind lifting distribution (linearly increasing from left to right)
+        wind_arrows = VGroup()
+        num_arrows = 12
+        max_arrow_length = 1
+        
+        for i in range(num_arrows):
+            x_pos = beam_left + beam_length * (i + 0.5) / num_arrows
+            # Arrow length increases linearly from left to right
+            arrow_length = max_arrow_length * (i + 1) / num_arrows
+            
+            # Changed direction of arrows to point DOWNWARD (from below the beam)
+            arrow = Arrow(
+                start=[x_pos, beam_center_y - beam_height/2 - arrow_length, 0],
+                end=[x_pos, beam_center_y - beam_height/2, 0],
+                buff=0,
+                color=RED,
+                stroke_width=2,
+                max_tip_length_to_length_ratio=0.15
+            )
+            wind_arrows.add(arrow)
+        
+        # Add a bracket below arrows with q(x) label
+        # Moved bracket above arrows to avoid pushing label off screen
+        wind_bracket = Brace(wind_arrows, direction=DOWN, color=RED)
+        wind_label = MathTex("q(x) = q_0 \\frac{x}{L}", color=RED)
+        wind_label.next_to(wind_bracket, DOWN, buff=0.2)  # Reduced buffer to keep on screen
+        
+        # Show the wind load
+        self.play(
+            Create(wind_arrows),
+            Create(wind_bracket),
+            Write(wind_label)
+        )
+        self.wait(1)
+        
+        # Create deflection curve for wind lifting distribution
+        def get_wind_lift_curve():
+            points = []
+            num_points = 100
+            
+            for i in range(num_points + 1):
+                x_ratio = i / num_points
+                x = beam_left + x_ratio * beam_length
+                
+                # For a cantilever with linearly increasing upward load
+                # Deflection is upward (positive) and approximately follows a 5th order polynomial
+                L = beam_length
+                rel_x = x_ratio * L
+                
+                # Simplified approximation for upward deflection with linearly increasing load
+                deflection = 1.2 * (rel_x/L)**3 * (10 - 10*(rel_x/L) + 3*(rel_x/L)**2)
+                
+                y = beam_center_y + deflection
+                points.append([x, y, 0])
+            
+            return points
+        
+        # Create deflected beam for wind lifting
+        wind_points = get_wind_lift_curve()
+        
+        # Create deflected neutral axis
+        wind_deflected_neutral = VMobject(color=YELLOW, stroke_width=3)
+        wind_deflected_neutral.set_points_as_corners(wind_points)
+        
+        # Create deflected beam (top and bottom curves)
+        wind_top_points = []
+        wind_bottom_points = []
+        
+        for point in wind_points:
+            wind_top_points.append([point[0], point[1] + beam_height/2, 0])
+            wind_bottom_points.append([point[0], point[1] - beam_height/2, 0])
+        
+        # Add the right end of the beam
+        wind_right_end = Line(
+            start=wind_top_points[-1],
+            end=wind_bottom_points[-1],
+            color=WHITE,
+            stroke_width=2.5
+        )
+        
+        # Create deflected beam curves
+        wind_top_curve = VMobject(color=WHITE, stroke_width=2.5)
+        wind_top_curve.set_points_as_corners(wind_top_points)
+        
+        wind_bottom_curve = VMobject(color=WHITE, stroke_width=2.5)
+        wind_bottom_curve.set_points_as_corners(wind_bottom_points)
+        
+        wind_deflected_beam = VGroup(wind_top_curve, wind_bottom_curve, wind_right_end)
+        
+        # Mathematical explanation
+        wind_math = MathTex(
+            r"q(x) = q_0 \frac{x}{L}",
+            font_size=32
+        )
+        wind_math.next_to(case3_title, DOWN, buff=0.5)
+        
+        # Animate the deflection
+        self.play(Write(wind_math))
+        self.play(
+            FadeTransform(another_straight_neutral, wind_deflected_neutral),
+            FadeTransform(another_straight_beam, wind_deflected_beam)
+        )
+        self.wait(2)
+        
+        # Clean up and finish
+        self.play(
+            FadeOut(VGroup(
+                fixed_support,
+                wind_arrows, wind_bracket, wind_label, wind_math, case3_title,
+                wind_deflected_neutral, wind_deflected_beam
+            ))
+        )
+        self.wait(1)
