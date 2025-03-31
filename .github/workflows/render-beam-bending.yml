@@ -43,15 +43,29 @@ jobs:
       - name: Combine animations into final video
         shell: bash -l {0}
         run: |
+          # Add debugging to check directories and files
+          echo "Listing media directory contents:"
+          ls -la media/ || echo "Media directory not found"
+          echo "Listing media/videos directory contents:"
+          ls -la media/videos/ || echo "media/videos directory not found"
+          
           # Combine scenes into final 4K video
           xvfb-run -a python scripts/combine-video-script.py --output teaching_demo_4k.mp4 --sequence video_sequence.txt --quality 4K60
+          
+          # Check if output file was created and where
+          echo "Checking for output file:"
+          find . -name "teaching_demo_4k.mp4" -type f
+          echo "Listing current directory:"
+          ls -la
 
       - name: Upload rendered video
         uses: actions/upload-artifact@v4
         with:
           name: beam-bending-video
-          path: teaching_demo_4k.mp4
-          if-no-files-found: error
+          path: |
+            teaching_demo_4k.mp4
+            media/**/*.mp4
+          if-no-files-found: warn
 
       - name: Create Release (for main branch only)
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
