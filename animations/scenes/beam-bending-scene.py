@@ -937,6 +937,50 @@ class BeamSecondAreaWing(ThreeDScene):
             run_time=2
         )
         self.wait(1)
+        
+        # Create fixed-in-frame vertical arrow with labels
+        # This will be positioned in the 2D plane of the screen, independent of 3D coordinates
+        
+        # Create the vertical arrow in 2D coordinates
+        span_arrow = Arrow(
+            start=np.array([-3, 2, 0]),  # Top of the arrow
+            end=np.array([-3, -2.5, 0]),   # Bottom of the arrow
+            color=BLUE,
+            stroke_width=3,
+            buff=0
+        )
+        
+        # Create the labels
+        root_label = Tex("Root", color=BLUE, font_size=30)
+        root_label.next_to(span_arrow.get_start(), UP, buff=0.2)
+        
+        tip_label = Tex("Tip", color=BLUE, font_size=30)
+        tip_label.next_to(span_arrow.get_end(), DOWN, buff=0.2)
+        
+        # Position the X label at the middle of the arrow, to the right
+        arrow_mid = (span_arrow.get_start() + span_arrow.get_end()) / 2
+        x_label = Tex("X", color=BLUE, font_size=30)
+        x_label.next_to(arrow_mid, RIGHT, buff=0.5)
+        
+        # Add all objects as fixed in frame to ensure they appear correctly in 3D
+        self.add_fixed_in_frame_mobjects(span_arrow, root_label, tip_label, x_label)
+        
+        # Animate the appearance
+        self.play(
+            Create(span_arrow),
+            Write(root_label),
+            Write(tip_label),
+            Write(x_label),
+            run_time=1.5
+        )
+        
+        # Store references if needed
+        self.wing_span_arrow = span_arrow
+        self.root_label = root_label
+        self.tip_label = tip_label
+        self.x_label = x_label
+        
+        self.wait(1)
     
     def show_final_equation(self, wing):
         """Fade out wing and show the integral equation with precise positioning."""
