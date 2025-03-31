@@ -359,8 +359,8 @@ class BeamEquationsScene(Scene):
     def construct(self):
         # --------- STEP 1: Title and equation first ---------
         title = Tex(r"Static Euler-Bernoulli Beam Equation", font_size=42)
-        self.play(Write(title))
-        self.wait(0.5)
+        self.play(Write(title),run_time=2)
+        self.wait(3.5)
         self.play(title.animate.to_edge(UP, buff=0.5))
         
         # Show equation below title
@@ -369,8 +369,8 @@ class BeamEquationsScene(Scene):
             font_size=36
         )
         eq.next_to(title, DOWN, buff=0.75)
-        self.play(Write(eq))
-        self.wait(1)
+        self.play(Write(eq),run_time = 5)
+        self.wait(5)
         
         # --------- STEP 2: Create initial straight beam ---------
         # Beam dimensions and position
@@ -456,17 +456,16 @@ class BeamEquationsScene(Scene):
         
         # --------- STEP 4: Pulse x-axis and add "Coordinate Direction" ---------
         # Create "Coordinate Direction" text
-        coord_direction = Tex("Beam Axis", color=BLUE, font_size=30)
-        coord_direction.next_to(eq, DOWN, buff=1.0)
+
+         # Get the I(x) part from the equation
+        x_term = eq[0][8]  # This is the "x" part
         
-        # Create arrow pointing to x in equation
-        x_eq_arrow = Arrow(
-            start=coord_direction.get_center() + RIGHT * 0.1,
-            end=eq.get_center() + LEFT * 0.2 + DOWN * 0.1,
-            color=BLUE,
-            stroke_width=2,
-            max_tip_length_to_length_ratio=0.35
-        )
+        # Create a bracket under the x term
+        bracket = Brace(x_term, direction=DOWN, color=BLUE)
+        
+        # Create a label for the bracket
+        label = Tex("Beam Axis", color=BLUE)
+        label.next_to(bracket, DOWN)
         
         # Pulse effect for x-axis (scale up and down)
         x_axis_pulse = Succession(
@@ -482,15 +481,17 @@ class BeamEquationsScene(Scene):
         
         # Show text, arrow, and pulse x-axis simultaneously
         self.play(
-            Write(coord_direction),
-            Create(x_eq_arrow),
-            x_axis_pulse
+            x_term.animate.set_color(BLUE),
+            GrowFromCenter(bracket),
+            Write(label),
+            x_axis_pulse,
+            run_time = 5
         )
-        self.wait(0.5)
+        self.wait(2)
         
         # Repeat pulse one more time
         self.play(x_axis_pulse)
-        self.wait(0.5)
+        self.wait(2)
         
         # --------- STEP 5: Transition to deformed beam ---------
         
@@ -561,6 +562,9 @@ class BeamEquationsScene(Scene):
         neutral_points = get_cantilever_curve(y_offset=0, beam_center_y=beam_center_y, beam_left=beam_left)
         deformed_neutral = VMobject(color=YELLOW, stroke_width=3)
         deformed_neutral.set_points_as_corners(neutral_points)
+
+        neutral_axis_label = Tex("Neutral Axis", color=YELLOW, font_size=40)
+        neutral_axis_label.next_to(deformed_neutral, UP).shift(DOWN*2.5)
         
         # Transition beam from straight to deformed 
         # and simultaneously fade out the coordinate direction text and arrow
@@ -569,8 +573,10 @@ class BeamEquationsScene(Scene):
             FadeTransform(neutral_axis, deformed_neutral),
             FadeIn(dotted_beam),
             FadeIn(dotted_neutral),
-            FadeOut(coord_direction),
-            FadeOut(x_eq_arrow)
+            FadeOut(bracket),
+            FadeOut(label),
+            x_term.animate.set_color(WHITE),
+            Write(neutral_axis_label)
         )
         self.wait(1)
         
@@ -617,13 +623,281 @@ class BeamEquationsScene(Scene):
         )
         self.wait(2)
         
-        # Clean up
+        # --------- STEP 7: Transition to undeformed beam at an angle---------
+        # Define rotation angle (75 degrees counter-clockwise from vertical)
+        angle_degrees = 15
+        angle_radians = angle_degrees * math.pi / 180
+
+        # Important: Keep the left side connection point the same as in the original beam
+        # These are the coordinates where the beam connects to the support
+        connection_x = beam_left
+        connection_y = beam_center_y
+
+        # Calculate beam end positions based on the rotation
+        beam_end_x = connection_x + beam_length * math.cos(angle_radians)
+        beam_end_y = connection_y + beam_length * math.sin(angle_radians)
+
+        # Create rotated beam - calculating corner points
+        # For the beam outline
+        beam_corners = [
+            # Bottom left (at connection point)
+            [connection_x, connection_y - beam_height/2, 0],
+            
+            # Bottom right
+            [connection_x + beam_length * math.cos(angle_radians)+beam_height/2 * math.sin(angle_radians), 
+            connection_y + beam_length * math.sin(angle_radians) - beam_height/2 * math.cos(angle_radians), 0],
+            
+            # Top right
+            [connection_x + beam_length * math.cos(angle_radians) - beam_height/2 * math.sin(angle_radians), 
+            connection_y + beam_length * math.sin(angle_radians) + beam_height/2 * math.cos(angle_radians), 0],
+            
+            # Top left
+            [connection_x, connection_y + beam_height/2, 0],
+        ]
+
+        # Creating the rotated beam as a polygon
+        rotated_beam = Polygon(
+            *beam_corners,
+            color=WHITE,
+            stroke_width=2.5,
+            fill_opacity=0
+        )
+
+        # Create neutral axis along the middle of the beam
+        rotated_neutral_start = [connection_x, connection_y, 0]
+        rotated_neutral_end = [beam_end_x, beam_end_y, 0]
+
+        rotated_neutral_axis = Line(
+            start=rotated_neutral_start,
+            end=rotated_neutral_end,
+            color=YELLOW,
+            stroke_width=3
+        )
+
+        # First, fade out previous elements but keep title and equation
         self.play(
             FadeOut(VGroup(
                 displacement, w_eq_arrow,
                 dotted_beam, dotted_neutral, deformed_beam, deformed_neutral,
-                fixed_support, x_axis, x_label, z_axis, z_label,
-                w_vector, w_label
+                w_vector, w_label, neutral_axis_label
+            ))
+        )
+        self.wait(1)
+
+        # Show new rotated beam setup
+        self.play(
+            FadeIn(rotated_beam),
+            FadeIn(rotated_neutral_axis)
+        )
+        self.wait(1)
+
+        # --------- STEP 8: Transition to deformed beam at an angle---------
+
+        # Function to create deformed angled beam points
+        def get_angled_curve_points(start_x, start_y, angle_rad, length, max_deflection=0.8):
+            points = []
+            num_points = 100
+            
+            # Direction vector from the angle
+            dir_x = math.cos(angle_rad)
+            dir_y = math.sin(angle_rad)
+            
+            for i in range(num_points + 1):
+                t = i / num_points  # Parameter from 0 to 1
+                
+                # Calculate position along straight beam
+                straight_x = start_x + t * length * dir_x
+                straight_y = start_y + t * length * dir_y
+                
+                # Calculate deflection perpendicular to beam direction
+                # Use a cubic curve shape (similar to cantilever deflection)
+                # deflection is perpendicular to the beam direction
+                deflection = max_deflection * (3 * t**2 - 2 * t**3)
+                
+                # Calculate the perpendicular direction for deflection
+                perp_x = -dir_y  # Perpendicular is (-dy, dx)
+                perp_y = dir_x
+                
+                # Apply deflection in the perpendicular direction
+                curved_x = straight_x + deflection * perp_x
+                curved_y = straight_y + deflection * perp_y
+                
+                points.append([curved_x, curved_y, 0])
+            
+            return points
+
+        # Create points for the deformed neutral axis
+        deformed_neutral_points = get_angled_curve_points(
+            connection_x, connection_y, angle_radians, beam_length
+        )
+
+        # Create the deformed neutral axis
+        deformed_angled_neutral = VMobject(color=YELLOW, stroke_width=3)
+        deformed_angled_neutral.set_points_as_corners(deformed_neutral_points)
+
+        # Calculate beam thickness points (top and bottom curves)
+        # Get the perpendicular direction for the half-height offsets
+        perp_x = -math.sin(angle_radians)
+        perp_y = math.cos(angle_radians)
+
+        # Create top and bottom curve points by offsetting from the neutral axis
+        top_points = []
+        bottom_points = []
+
+        for point in deformed_neutral_points:
+            # Calculate the tangent at this point (approximate by looking at neighboring points)
+            # For simplicity, we'll use the original beam angle for the left end and then gradually adjust
+            idx = deformed_neutral_points.index(point)
+            
+            if idx == 0:
+                # At the first point, use the original beam angle
+                tangent_x = math.cos(angle_radians)
+                tangent_y = math.sin(angle_radians)
+            elif idx == len(deformed_neutral_points) - 1:
+                # At the last point, calculate from the previous point
+                prev = deformed_neutral_points[idx - 1]
+                tangent_x = point[0] - prev[0]
+                tangent_y = point[1] - prev[1]
+            else:
+                # At middle points, use central difference
+                next_pt = deformed_neutral_points[idx + 1]
+                prev_pt = deformed_neutral_points[idx - 1]
+                tangent_x = next_pt[0] - prev_pt[0]
+                tangent_y = next_pt[1] - prev_pt[1]
+            
+            # Normalize the tangent
+            tangent_len = math.sqrt(tangent_x**2 + tangent_y**2)
+            if tangent_len > 0:
+                tangent_x /= tangent_len
+                tangent_y /= tangent_len
+            
+            # Calculate perpendicular to tangent
+            perp_x = -tangent_y
+            perp_y = tangent_x
+            
+            # Offset in perpendicular direction
+            top_points.append([
+                point[0] + beam_height/2 * perp_x,
+                point[1] + beam_height/2 * perp_y,
+                0
+            ])
+            
+            bottom_points.append([
+                point[0] - beam_height/2 * perp_x,
+                point[1] - beam_height/2 * perp_y,
+                0
+            ])
+
+        # Create the right end of the beam
+        deformed_angled_right = Line(
+            start=top_points[-1],
+            end=bottom_points[-1],
+            color=WHITE,
+            stroke_width=2.5
+        )
+
+        # Create the deformed beam top and bottom curves
+        deformed_angled_top = VMobject(color=WHITE, stroke_width=2.5)
+        deformed_angled_top.set_points_as_corners(top_points)
+
+        deformed_angled_bottom = VMobject(color=WHITE, stroke_width=2.5)
+        deformed_angled_bottom.set_points_as_corners(bottom_points)
+
+        # Group the deformed beam parts
+        deformed_angled_beam = VGroup(
+            deformed_angled_top, deformed_angled_bottom, deformed_angled_right
+        )
+
+        # Create a dotted line showing the original straight beam for reference
+        dotted_straight = DashedLine(
+            start=[connection_x, connection_y, 0],
+            end=[beam_end_x, beam_end_y, 0],
+            color=WHITE,
+            stroke_width=2,
+            stroke_opacity=0.4,
+            dash_length=0.1
+        )
+
+        # Transition from straight angled beam to deformed angled beam
+        # Use FadeTransform for smooth transitions between corresponding elements
+        self.play(
+            FadeTransform(rotated_neutral_axis, deformed_angled_neutral),
+            FadeTransform(rotated_beam, deformed_angled_beam),
+            Create(dotted_straight),
+            run_time=2  # Slower animation for better visualization
+        )
+        self.wait(1)
+
+        # Keep or recreate the neutral axis label in the same style
+        if 'rotated_neutral_label' in locals():
+            # If the label exists from Step 7, move it to a better position on the curved beam
+            middle_idx = len(deformed_neutral_points) // 2
+            middle_point = deformed_neutral_points[middle_idx]
+            self.play(
+                rotated_neutral_label.animate.next_to(middle_point, UP, buff=0.3)
+            )
+        else:
+            # Create a new label in the same style as in the original straight beam
+            neutral_axis_label = Tex("Neutral Axis", color=YELLOW, font_size=36)
+            middle_idx = len(deformed_neutral_points) // 2
+            middle_point = deformed_neutral_points[middle_idx]
+            neutral_axis_label.next_to(middle_point, UP, buff=0.3)
+            self.play(Write(neutral_axis_label))
+            
+        self.wait(1)
+
+        # Add a vector to show displacement w (similar to the original straight beam)
+        # Pick a point about 3/4 along the beam (to match the position in the straight case)
+        vector_index = int(0.75 * len(deformed_neutral_points))
+        vector_point = deformed_neutral_points[vector_index]
+
+        # Calculate the corresponding point on the undeformed beam
+        t = vector_index / (len(deformed_neutral_points) - 1)
+        straight_x = connection_x + t * beam_length * math.cos(angle_radians)
+        straight_y = connection_y + t * beam_length * math.sin(angle_radians)
+        straight_point = [straight_x, straight_y, 0]
+
+        # Create a displacement vector and label (using RED as in the original)
+        w_vector = Arrow(
+            start=straight_point,
+            end=vector_point,
+            buff=0,
+            color=RED,
+            stroke_width=3
+        )
+        w_label = MathTex("w", color=RED, font_size=30).next_to(w_vector, RIGHT, buff=0.1)
+
+        # Create "Displacement" text (matching the original)
+        displacement = Tex("Displacement", color=RED, font_size=30)
+        displacement.next_to(eq, DOWN, buff=1.0)
+
+        # Create arrow pointing to w in equation (matching the original)
+        w_eq_arrow = Arrow(
+            start=displacement.get_center(),
+            end=eq.get_center() + RIGHT * 0.65 + UP * 0.3,
+            color=RED,
+            stroke_width=2,
+            max_tip_length_to_length_ratio=0.35
+        )
+
+        # Show vector, label, text and arrow (matching the sequence from the original)
+        self.play(
+            Create(w_vector),
+            Write(w_label)
+        )
+        self.wait(0.5)
+
+        self.play(
+            Write(displacement),
+            Create(w_eq_arrow)
+        )
+        self.wait(2)
+
+        # Clean up
+        self.play(
+            FadeOut(VGroup(
+                fixed_support, x_axis, x_label, z_axis, z_label, rotated_beam,
+                rotated_neutral_axis
             ))
         )
         self.wait(1)
@@ -1326,10 +1600,6 @@ class BeamModulousElasticity(ThreeDScene):
             tip_cross_section.add(circle)
         
         return tip_cross_section
-
-# animations/scenes/beam_distributed_load.py
-from manim import *
-import numpy as np
 
 def show_euler_bernoulli_equation(self):
     """Show the Euler-Bernoulli beam equation."""

@@ -4,9 +4,15 @@
 
 # Introduction
 IntroScene
+BeamExamplesScene
+BeamIntroductionScene
 
 # Beam types and basic concepts
 BeamTypesScene
+BeamtoPlate
+
+#Intro to Modeling Transition
+Outro
 
 # Mathematical foundation
 BeamEquationsScene
@@ -15,7 +21,3 @@ BeamModulousElasticity
 BeamDistributedLoad
 BeamSlope
 BeamCurvature
-
-# Example and application
-BeamExampleScene
-RealWorldApplications

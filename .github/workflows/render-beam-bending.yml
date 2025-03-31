@@ -1,0 +1,66 @@
+name: Render Beam Bending Visualization
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:  # This allows manual triggering of the workflow
+
+jobs:
+  render-video:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Miniconda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: beam-animations
+          environment-file: environment.yml
+          auto-activate-base: false
+          python-version: "3.10"
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb ffmpeg texlive texlive-latex-extra texlive-fonts-recommended texlive-science texlive-xetex
+
+      - name: Cache conda environment
+        uses: actions/cache@v3
+        with:
+          path: /usr/share/miniconda/envs/beam-animations
+          key: ${{ runner.os }}-conda-env-${{ hashFiles('environment.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-conda-env-
+
+      - name: Render individual animations
+        shell: bash -l {0}
+        run: |
+          mkdir -p media/videos
+          # Run in a virtual X server to allow rendering
+          xvfb-run -a python scripts/render-all-script.py -qk
+
+      - name: Combine animations into final video
+        shell: bash -l {0}
+        run: |
+          # Combine scenes into final 4K video
+          xvfb-run -a python scripts/combine-video-script.py --output teaching_demo_4k.mp4 --sequence video_sequence.txt --quality 4K60
+
+      - name: Upload rendered video
+        uses: actions/upload-artifact@v3
+        with:
+          name: beam-bending-video
+          path: teaching_demo_4k.mp4
+          if-no-files-found: error
+
+      - name: Create Release (for main branch only)
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ github.run_number }}
+          name: Beam Bending Video v${{ github.run_number }}
+          files: teaching_demo_4k.mp4
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
