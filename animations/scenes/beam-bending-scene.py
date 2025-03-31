@@ -8,123 +8,64 @@ import math
 # Format: (x, y) points from trailing edge (1,0), around to leading edge (0,0), and back to trailing edge (1,0)
 naca_coordinates = [
     # Upper surface from TE to LE
-    (1.0000, 0.0000),
-    (0.9750, 0.0044),
-    (0.9500, 0.0089),
-    (0.9250, 0.0124),
-    (0.9000, 0.0158),
-    (0.8750, 0.0187),
-    (0.8500, 0.0213),
-    (0.8000, 0.0266),
-    (0.7688, 0.0297),
-    (0.7375, 0.0326),
-    (0.7063, 0.0352),
-    (0.6750, 0.0376),
-    (0.6438, 0.0398),
-    (0.6125, 0.0417),
-    (0.5813, 0.0435),
-    (0.5500, 0.0451),
-    (0.5188, 0.0464),
-    (0.4875, 0.0476),
-    (0.4563, 0.0486),
-    (0.4250, 0.0494),
-    (0.3938, 0.0501),
-    (0.3625, 0.0505),
-    (0.3313, 0.0507),
-    (0.3000, 0.0507),
-    (0.2875, 0.0506),
-    (0.2750, 0.0503),
-    (0.2625, 0.0500),
-    (0.2500, 0.0495),
-    (0.2375, 0.0490),
-    (0.2250, 0.0484),
-    (0.2125, 0.0479),
-    (0.2000, 0.0473),
-    (0.1875, 0.0466),
-    (0.1750, 0.0458),
-    (0.1625, 0.0449),
-    (0.1500, 0.0439),
-    (0.1375, 0.0428),
-    (0.1250, 0.0416),
-    (0.1125, 0.0403),
-    (0.1000, 0.0388),
-    (0.0875, 0.0371),
-    (0.0750, 0.0348),
-    (0.0625, 0.0323),
-    (0.0500, 0.0294),
-    (0.0438, 0.0277),
-    (0.0375, 0.0258),
-    (0.0313, 0.0238),
-    (0.0250, 0.0216),
-    (0.0219, 0.0201),
-    (0.0188, 0.0186),
-    (0.0156, 0.0169),
-    (0.0125, 0.0151),
-    (0.0094, 0.0131),
-    (0.0063, 0.0107),
-    (0.0031, 0.0075),
-    (0.0016, 0.0053),
-    (0.0001, 0.0013),
-    (0.0000, 0.0000),
+    (1.0000, 0.0000), (0.9750, 0.0044), (0.9500, 0.0089), (0.9250, 0.0124), (0.9000, 0.0158),
+    (0.8750, 0.0187), (0.8500, 0.0213), (0.8000, 0.0266), (0.7688, 0.0297), (0.7375, 0.0326),
+    (0.7063, 0.0352), (0.6750, 0.0376), (0.6438, 0.0398), (0.6125, 0.0417), (0.5813, 0.0435),
+    (0.5500, 0.0451), (0.5188, 0.0464), (0.4875, 0.0476), (0.4563, 0.0486), (0.4250, 0.0494),
+    (0.3938, 0.0501), (0.3625, 0.0505), (0.3313, 0.0507), (0.3000, 0.0507), (0.2875, 0.0506),
+    (0.2750, 0.0503), (0.2625, 0.0500), (0.2500, 0.0495), (0.2375, 0.0490), (0.2250, 0.0484),
+    (0.2125, 0.0479), (0.2000, 0.0473), (0.1875, 0.0466), (0.1750, 0.0458), (0.1625, 0.0449),
+    (0.1500, 0.0439), (0.1375, 0.0428), (0.1250, 0.0416), (0.1125, 0.0403), (0.1000, 0.0388),
+    (0.0875, 0.0371), (0.0750, 0.0348), (0.0625, 0.0323), (0.0500, 0.0294), (0.0438, 0.0277),
+    (0.0375, 0.0258), (0.0313, 0.0238), (0.0250, 0.0216), (0.0219, 0.0201), (0.0188, 0.0186),
+    (0.0156, 0.0169), (0.0125, 0.0151), (0.0094, 0.0131), (0.0063, 0.0107), (0.0031, 0.0075),
+    (0.0016, 0.0053), (0.0001, 0.0013), (0.0000, 0.0000),
     # Lower surface from LE to TE
-    (0.0001, -0.0013),
-    (0.0016, -0.0053),
-    (0.0031, -0.0075),
-    (0.0063, -0.0107),
-    (0.0094, -0.0131),
-    (0.0125, -0.0151),
-    (0.0156, -0.0169),
-    (0.0188, -0.0186),
-    (0.0219, -0.0201),
-    (0.0250, -0.0216),
-    (0.0313, -0.0238),
-    (0.0375, -0.0258),
-    (0.0438, -0.0277),
-    (0.0500, -0.0294),
-    (0.0625, -0.0323),
-    (0.0750, -0.0348),
-    (0.0875, -0.0371),
-    (0.1000, -0.0388),
-    (0.1125, -0.0403),
-    (0.1250, -0.0416),
-    (0.1375, -0.0428),
-    (0.1500, -0.0439),
-    (0.1625, -0.0449),
-    (0.1750, -0.0458),
-    (0.1875, -0.0466),
-    (0.2000, -0.0473),
-    (0.2125, -0.0479),
-    (0.2250, -0.0484),
-    (0.2375, -0.0490),
-    (0.2500, -0.0495),
-    (0.2625, -0.0500),
-    (0.2750, -0.0503),
-    (0.2875, -0.0506),
-    (0.3000, -0.0507),
-    (0.3313, -0.0507),
-    (0.3625, -0.0505),
-    (0.3938, -0.0501),
-    (0.4250, -0.0494),
-    (0.4563, -0.0486),
-    (0.4875, -0.0476),
-    (0.5188, -0.0464),
-    (0.5500, -0.0451),
-    (0.5813, -0.0435),
-    (0.6125, -0.0417),
-    (0.6438, -0.0398),
-    (0.6750, -0.0376),
-    (0.7063, -0.0352),
-    (0.7375, -0.0326),
-    (0.7688, -0.0297),
-    (0.8000, -0.0266),
-    (0.8500, -0.0213),
-    (0.8750, -0.0187),
-    (0.9000, -0.0158),
-    (0.9250, -0.0124),
-    (0.9500, -0.0089),
-    (0.9750, -0.0044),
-    (1.0000, 0.0000),
+    (0.0001, -0.0013), (0.0016, -0.0053), (0.0031, -0.0075), (0.0063, -0.0107), (0.0094, -0.0131),
+    (0.0125, -0.0151), (0.0156, -0.0169), (0.0188, -0.0186), (0.0219, -0.0201), (0.0250, -0.0216),
+    (0.0313, -0.0238), (0.0375, -0.0258), (0.0438, -0.0277), (0.0500, -0.0294), (0.0625, -0.0323),
+    (0.0750, -0.0348), (0.0875, -0.0371), (0.1000, -0.0388), (0.1125, -0.0403), (0.1250, -0.0416),
+    (0.1375, -0.0428), (0.1500, -0.0439), (0.1625, -0.0449), (0.1750, -0.0458), (0.1875, -0.0466),
+    (0.2000, -0.0473), (0.2125, -0.0479), (0.2250, -0.0484), (0.2375, -0.0490), (0.2500, -0.0495),
+    (0.2625, -0.0500), (0.2750, -0.0503), (0.2875, -0.0506), (0.3000, -0.0507), (0.3313, -0.0507),
+    (0.3625, -0.0505), (0.3938, -0.0501), (0.4250, -0.0494), (0.4563, -0.0486), (0.4875, -0.0476),
+    (0.5188, -0.0464), (0.5500, -0.0451), (0.5813, -0.0435), (0.6125, -0.0417), (0.6438, -0.0398),
+    (0.6750, -0.0376), (0.7063, -0.0352), (0.7375, -0.0326), (0.7688, -0.0297), (0.8000, -0.0266),
+    (0.8500, -0.0213), (0.8750, -0.0187), (0.9000, -0.0158), (0.9250, -0.0124), (0.9500, -0.0089),
+    (0.9750, -0.0044), (1.0000, 0.0000),
 ]
+
+def create_beam(self):
+    """Create a straight beam."""
+    # Beam dimensions
+    beam_length = 9
+    beam_height = 0.8
+    beam_center_y = 0
+    
+    # Create the beam
+    beam = Line(
+        start=[-beam_length / 2, beam_center_y - beam_height / 2, 0],
+        end=[beam_length / 2, beam_center_y - beam_height / 2, 0],
+        color=WHITE,
+        stroke_width=3
+    )
+    
+    # Add the top and bottom lines of the beam
+    top_line = Line(
+        start=[-beam_length / 2, beam_center_y + beam_height / 2, 0],
+        end=[beam_length / 2, beam_center_y + beam_height / 2, 0],
+        color=WHITE,
+        stroke_width=3
+    )
+    
+    bottom_line = Line(
+        start=[-beam_length / 2, beam_center_y - beam_height / 2, 0],
+        end=[-beam_length / 2, beam_center_y + beam_height / 2, 0],
+        color=WHITE,
+        stroke_width=3
+    )
+    
+    return VGroup(beam, top_line, bottom_line)
 
 def show_euler_bernoulli_equation(self):
     """Show the Euler-Bernoulli beam equation."""
@@ -306,6 +247,20 @@ def show_cross_sections(self, wing, positions):
         self.wait(0.5)
     
     return sections
+
+# Function for cantilever beam deflection curve
+def get_cantilever_curve(y_offset=0, max_deflection=1.2, beam_length=9, beam_center_y=0, beam_left=-5):
+    points = []
+    num_points = 100
+    for i in range(num_points + 1):
+        x_ratio = i / num_points
+        x = beam_left + x_ratio * beam_length
+        
+        # Cubic deflection curve for cantilever
+        deflection = max_deflection * (3 * x_ratio**2 - 2 * x_ratio**3)
+        y = beam_center_y + y_offset - deflection
+        points.append([x, y, 0])
+    return points
 
 class BeamBendingBasics(Scene):
     def construct(self):
@@ -538,19 +493,6 @@ class BeamEquationsScene(Scene):
         self.wait(0.5)
         
         # --------- STEP 5: Transition to deformed beam ---------
-        # Function for cantilever beam deflection curve
-        def get_cantilever_curve(y_offset=0, max_deflection=1.2):
-            points = []
-            num_points = 100
-            for i in range(num_points + 1):
-                x_ratio = i / num_points
-                x = beam_left + x_ratio * beam_length
-                
-                # Cubic deflection curve for cantilever
-                deflection = max_deflection * (3 * x_ratio**2 - 2 * x_ratio**3)
-                y = beam_center_y + y_offset - deflection
-                points.append([x, y, 0])
-            return points
         
         # Create dotted outline of original beam
         dotted_top = DashedLine(
@@ -595,8 +537,8 @@ class BeamEquationsScene(Scene):
         )
         
         # Create deformed beam with curves
-        deformed_top_points = get_cantilever_curve(y_offset=beam_height/2)
-        deformed_bottom_points = get_cantilever_curve(y_offset=-beam_height/2)
+        deformed_top_points = get_cantilever_curve(y_offset=beam_height/2,beam_center_y=beam_center_y,beam_left=beam_left)
+        deformed_bottom_points = get_cantilever_curve(y_offset=-beam_height/2,beam_center_y=beam_center_y,beam_left=beam_left)
         
         deformed_top = VMobject(color=WHITE, stroke_width=2.5)
         deformed_top.set_points_as_corners(deformed_top_points)
@@ -616,7 +558,7 @@ class BeamEquationsScene(Scene):
         )
         
         # Create deformed neutral axis
-        neutral_points = get_cantilever_curve(y_offset=0)
+        neutral_points = get_cantilever_curve(y_offset=0, beam_center_y=beam_center_y, beam_left=beam_left)
         deformed_neutral = VMobject(color=YELLOW, stroke_width=3)
         deformed_neutral.set_points_as_corners(neutral_points)
         
@@ -1789,7 +1731,7 @@ class BeamDistributedLoad(Scene):
         self.wait(1)
         
         # --------- STEP 8: Load Case 3 - Wind Lifting Distribution ---------
-        case3_title = Tex("Case 3: Wind Lifting Distribution", color=RED, font_size=36)
+        case3_title = Tex("Case 3: Wing Lifting Distribution", color=RED, font_size=36)
         case3_title.to_edge(UP)  # Move to center top
         self.play(Write(case3_title))
         
@@ -1903,6 +1845,1010 @@ class BeamDistributedLoad(Scene):
                 fixed_support,
                 wind_arrows, wind_bracket, wind_label, wind_math, case3_title,
                 wind_deflected_neutral, wind_deflected_beam
+            ))
+        )
+        self.wait(1)
+
+class BeamSlope(Scene):
+    def construct(self):
+        # --------- STEP 1: Title and equation first ---------
+        show_euler_bernoulli_equation(self)
+
+        # --------- STEP 2: Highlight w(x) term ---------
+        # Get the w(x) part from the equation
+        w_term = self.equation[4]  # This is the "w(x)" part
+        # Create a bracket under the w(x) term
+        bracket = Brace(w_term, direction=DOWN, color=YELLOW)
+        # Create a label for the bracket
+        label = Tex("Curvature", color=YELLOW)
+        label.next_to(bracket, DOWN)
+        # Animate highlighting the w(x) term
+        self.play(
+            w_term.animate.set_color(YELLOW),
+            GrowFromCenter(bracket),
+            Write(label)
+        )
+        self.wait(1)
+        
+        # --------- STEP 3: Create beam ---------
+        # Beam dimensions and position
+        beam_length = 9
+        beam_height = 0.8
+        beam_center_y = -1  # Position lower on screen
+        # Determine beam endpoints
+        beam_left = -beam_length/2  # Centered horizontally
+        beam_right = beam_length/2
+        # Create fixed support at left end
+        fixed_support = Rectangle(
+            height=beam_height + 0.5,
+            width=0.8,
+            fill_color=BLUE,
+            fill_opacity=0.8,
+            color=BLUE,
+            stroke_width=2
+        )
+        fixed_support.move_to([beam_left - 0.4, beam_center_y, 0])
+        # Initial straight beam
+        straight_beam = Rectangle(
+            height=beam_height,
+            width=beam_length,
+            fill_color=WHITE,
+            fill_opacity=0.0,
+            color=WHITE,
+            stroke_width=2.5
+        )
+        straight_beam.move_to([0, beam_center_y, 0])  # Centered horizontally
+        # Initial neutral axis - solid yellow
+        neutral_axis = Line(
+            start=[beam_left, beam_center_y, 0],
+            end=[beam_right, beam_center_y, 0],
+            color=YELLOW,
+            stroke_width=3
+        )
+        # Show fixed support and beam with neutral axis
+        self.play(
+            Create(fixed_support),
+            Create(straight_beam),
+            Create(neutral_axis)
+        )
+        self.wait(1)
+        
+        # --------- STEP 4: Show beam deflection and slope ---------
+        # Add title for Step 4
+        beam_slope_title = Tex("Beam Slope", font_size=42)
+        beam_slope_title.to_edge(UP)
+        
+        # Fade out equation and previous text, add title
+        self.play(
+            FadeOut(self.title),
+            FadeOut(self.equation),
+            FadeOut(bracket),
+            FadeOut(label),
+            Write(beam_slope_title)
+        )
+        self.wait(1)
+        
+        # Transition beam upward by 0.5
+        new_beam_center_y = beam_center_y + 0.5
+        
+        # Generate deformed beam curve using provided function
+        deformed_points = get_cantilever_curve(
+            y_offset=0, 
+            max_deflection=1.2, 
+            beam_length=beam_length, 
+            beam_center_y=new_beam_center_y,  # Updated y position
+            beam_left=beam_left
+        )
+        
+        # Create deformed neutral axis
+        deformed_neutral = VMobject(color=YELLOW, stroke_width=3)
+        deformed_neutral.set_points_as_corners(deformed_points)
+        
+        # Create deformed beam (top and bottom curves)
+        top_points = []
+        bottom_points = []
+        
+        for point in deformed_points:
+            top_points.append([point[0], point[1] + beam_height/2, 0])
+            bottom_points.append([point[0], point[1] - beam_height/2, 0])
+        
+        # Create deformed beam top curve
+        deformed_top = VMobject(color=WHITE, stroke_width=2.5)
+        deformed_top.set_points_as_corners(top_points)
+        
+        # Create deformed beam bottom curve
+        deformed_bottom = VMobject(color=WHITE, stroke_width=2.5)
+        deformed_bottom.set_points_as_corners(bottom_points)
+        
+        # Add the right end of the beam
+        deformed_right = Line(
+            start=top_points[-1],
+            end=bottom_points[-1],
+            color=WHITE,
+            stroke_width=2.5
+        )
+        
+        # Move fixed support to new position
+        new_fixed_support = Rectangle(
+            height=beam_height + 0.5,
+            width=0.8,
+            fill_color=BLUE,
+            fill_opacity=0.8,
+            color=BLUE,
+            stroke_width=2
+        )
+        new_fixed_support.move_to([beam_left - 0.4, new_beam_center_y, 0])
+        
+        # Group the deformed beam parts
+        deformed_beam = VGroup(deformed_top, deformed_bottom, deformed_right)
+        
+        # Animate the transition from straight to deformed beam with vertical shift
+        self.play(
+            FadeTransform(straight_beam, deformed_beam),
+            FadeTransform(neutral_axis, deformed_neutral),
+            FadeTransform(fixed_support, new_fixed_support)
+        )
+        self.wait(1)
+        
+        # Calculate the midpoint position index
+        midpoint_index = len(deformed_points) // 2
+        
+        # Get the point at midpoint of beam on TOP surface
+        midpoint_top = top_points[midpoint_index]
+        
+        # Calculate the tangent at the midpoint using neighboring points for top surface
+        # Use a few points before and after to get a more accurate tangent
+        prev_index = midpoint_index - 5
+        next_index = midpoint_index + 5
+        prev_point_top = top_points[prev_index]
+        next_point_top = top_points[next_index]
+        
+        # Calculate the tangent slope at the midpoint
+        dx = next_point_top[0] - prev_point_top[0]
+        dy = next_point_top[1] - prev_point_top[1]
+        slope = dy / dx
+        
+        # Highlight the midpoint on the top surface
+        midpoint_dot = Dot(midpoint_top, color=RED)
+        
+        # Show the midpoint
+        self.play(Create(midpoint_dot))
+        self.wait(0.5)
+        
+        # Define the right triangle components
+        # Point on undeformed axis directly below the midpoint
+        horizontal_point = [midpoint_top[0], new_beam_center_y + beam_height/2, 0]
+        
+        # Extend to left for the horizontal line (dx)
+        horizontal_left = [midpoint_top[0] - 2.8, new_beam_center_y + beam_height/2, 0]
+        
+        # Vertical line (dw)
+        vertical_line = Line(
+            start=horizontal_point,  # Point on original top surface
+            end=midpoint_top,  # Point on deformed top surface
+            color=GREEN,
+            stroke_width=2
+        )
+        
+        # Horizontal line (dx)
+        horizontal_line = Line(
+            start=horizontal_left,  # Extended point to left
+            end=horizontal_point,  # Point below midpoint
+            color=BLUE,
+            stroke_width=2
+        )
+        
+        # Define tangent line that extends both ways from the midpoint
+        # First, calculate tangent line slope accurately at midpoint
+        tangent_extension = 3.0  # Extended length for both sides
+        
+        # Calculate extended tangent line endpoints
+        tangent_left = [
+            midpoint_top[0] - tangent_extension,
+            midpoint_top[1] - tangent_extension * slope,
+            0
+        ]
+        tangent_right = [
+            midpoint_top[0] + tangent_extension,
+            midpoint_top[1] + tangent_extension * slope,
+            0
+        ]
+        
+        # Create the tangent line properly passing through the midpoint
+        tangent_line = Line(
+            start=tangent_left,
+            end=tangent_right,
+            color=RED_E,
+            stroke_width=3
+        )
+        
+        # Create labels for the triangle sides
+        dw_label = MathTex("dw", color=GREEN, font_size=35)
+        dw_label.next_to(vertical_line, RIGHT, buff=0.1)
+        
+        dx_label = MathTex("dx", color=BLUE, font_size=35)
+        dx_label.next_to(horizontal_line, UP, buff=0.1)  # Positioned on TOP of line
+        
+        # Create angle arc ensuring it touches both lines
+        angle_radius = 1
+        angle_arc = Arc(
+            radius=angle_radius,
+            angle=1.25*np.arctan(slope),
+            start_angle=0,
+            color=YELLOW_E,
+            stroke_width=2
+        )
+        angle_arc.shift(horizontal_left)
+        
+        # Position theta label to the right of the arc
+        theta_angle = np.arctan(slope) / 2  # Halfway through the angle
+        theta_label = MathTex("\\theta", color=YELLOW_E, font_size=28)
+        theta_pos = [
+            horizontal_left[0] + angle_radius * np.cos(theta_angle) + 0.25,
+            horizontal_left[1] + angle_radius * np.sin(theta_angle) - 0.05,
+            0
+        ]
+        theta_label.move_to(theta_pos)
+        
+        # Show the tangent line first
+        self.play(Create(tangent_line))
+        self.wait(0.5)
+        
+        # Show the triangle components with labels
+        self.play(
+            Create(vertical_line),
+            Create(horizontal_line),
+            Create(angle_arc),
+            Write(dw_label),
+            Write(dx_label),
+            Write(theta_label)
+        )
+        self.wait(1)
+        
+        # Create the slope equation
+        slope_eq = MathTex(
+            r"\tan(\theta) = \frac{dw}{dx}",
+            font_size=42
+        )
+        slope_eq.next_to(beam_slope_title, DOWN, buff=0.5)
+        
+        # Show the slope equation
+        self.play(Write(slope_eq))
+        self.wait(1.5)
+        
+        # Create the small angle approximation equation
+        small_angle_eq = MathTex(
+            r"\theta \approx \frac{dw}{dx}",
+            font_size=42
+        )
+        small_angle_eq.move_to(slope_eq.get_center())
+        
+        # New title for small angle approximation
+        beam_angle_title = Tex("Beam Slope is Beam Angle", font_size=42)
+        beam_angle_title.to_edge(UP)
+        
+        # Transition to small angle approximation
+        self.play(
+            ReplacementTransform(slope_eq, small_angle_eq),
+            ReplacementTransform(beam_slope_title, beam_angle_title)
+        )
+        self.wait(2)
+        
+        # Optional cleanup
+        self.play(
+            FadeOut(VGroup(
+                deformed_beam, deformed_neutral,
+                midpoint_dot, tangent_line, vertical_line, horizontal_line,
+                angle_arc, dw_label, dx_label, theta_label, small_angle_eq,
+                beam_angle_title, new_fixed_support
+            ))
+        )
+        self.wait(1)
+
+class BeamCurvature(Scene):
+    def construct(self):
+        # --------- STEP 1: Title and equation first ---------
+        show_euler_bernoulli_equation(self)
+
+        # --------- STEP 2: Highlight w(x) term ---------
+        # Get the w(x) part from the equation
+        w_term = self.equation[4]  # This is the "w(x)" part
+        # Create a bracket under the w(x) term
+        bracket = Brace(w_term, direction=DOWN, color=YELLOW)
+        # Create a label for the bracket
+        label = Tex("Curvature", color=YELLOW)
+        label.next_to(bracket, DOWN)
+        # Animate highlighting the w(x) term
+        self.play(
+            w_term.animate.set_color(YELLOW),
+            GrowFromCenter(bracket),
+            Write(label)
+        )
+        self.wait(1)
+
+        # --------- STEP 3: Show curvature with osculating circle ---------
+        # Fade out equation and previous text, add title
+        curve_question_title = Tex("What is curvature?", font_size=42)
+        curve_question_title.to_edge(UP)
+        self.play(
+            FadeOut(self.title),
+            FadeOut(self.equation),
+            FadeOut(bracket),
+            FadeOut(label),
+            Write(curve_question_title)
+        )
+        self.wait(1)
+        
+        # Add the curvature formula
+        curvature_formula = MathTex(r"\kappa = \frac{1}{R}", font_size=36)
+        curvature_formula.next_to(curve_question_title, DOWN, buff=0.5)
+        self.play(Write(curvature_formula))
+        self.wait(1)
+        
+        # Define the parametric curve parameters (4th order polynomial)
+        # Coefficients adjusted to position and scale the curve directly
+        a = 0.075*pow(0.5,4)   # Coefficient for t^4
+        b = -0.3*pow(0.5,3)   # Coefficient for t^3
+        c = 0.2*pow(0.5,2)   # Coefficient for t^2
+        d = 0.1    # Coefficient for t^1
+        e = -2.5   # Coefficient for t^0 (vertical position)
+        
+        # Range adjusted to cover more screen width
+        t_min, t_max = -4.5, 7.75
+        
+        # Define the parametric curve functions
+        def curve_point(t):
+            """Returns the point on the curve at parameter t."""
+            x = t-2  # Shifted to center the curve
+            y = a*t**4 + b*t**3 + c*t**2 + d*t + e
+            return np.array([x, y, 0])
+        
+        def curve_derivative(t):
+            """Returns the first derivative of the curve at parameter t."""
+            dx_dt = 1  # Derivative of x = t is 1
+            dy_dt = 4*a*t**3 + 3*b*t**2 + 2*c*t + d
+            return np.array([dx_dt, dy_dt, 0])
+        
+        def curve_second_derivative(t):
+            """Returns the second derivative of the curve at parameter t."""
+            d2x_dt2 = 0  # Second derivative of x = t is 0
+            d2y_dt2 = 12*a*t**2 + 6*b*t + 2*c
+            return np.array([d2x_dt2, d2y_dt2, 0])
+        
+        def curvature(t):
+            """Calculate the curvature at parameter t."""
+            r_prime = curve_derivative(t)
+            r_double_prime = curve_second_derivative(t)
+            
+            # For a planar curve, curvature can be calculated as:
+            # κ = |x'y'' - y'x''| / (x'^2 + y'^2)^(3/2)
+            numerator = abs(r_prime[0] * r_double_prime[1] - r_prime[1] * r_double_prime[0])
+            denominator = (r_prime[0]**2 + r_prime[1]**2)**(3/2)
+            
+            if denominator != 0:
+                return numerator / denominator
+            else:
+                return 0  # Avoid division by zero
+        
+        def osculating_radius(t):
+            """Calculate the radius of the osculating circle at parameter t."""
+            k = curvature(t)
+            if k != 0:
+                return 1/k
+            else:
+                return 10  # Limiting max radius for almost straight sections
+        
+        def normal_vector(t):
+            """Calculate the unit normal vector at parameter t."""
+            r_prime = curve_derivative(t)
+            # Rotate tangent 90 degrees counter-clockwise to get normal
+            normal = np.array([-r_prime[1], r_prime[0], 0])
+            norm = np.linalg.norm(normal)
+            if norm != 0:
+                return normal / norm
+            else:
+                return np.array([0, 1, 0])  # Default if norm is zero
+        
+        def osculating_center(t):
+            """Calculate the center of the osculating circle at parameter t."""
+            p = curve_point(t)
+            n = normal_vector(t)
+            r = osculating_radius(t)
+            # Limit maximum radius for visual clarity
+            max_radius = 5
+            r = min(r, max_radius)
+            return p + r * n
+
+        # Create the parametric curve directly
+        num_points = 100
+        t_vals = np.linspace(t_min, t_max, num_points)
+        curve_points = [curve_point(t) for t in t_vals]
+        
+        curve = VMobject(color=YELLOW, stroke_width=3)
+        curve.set_points_as_corners(curve_points)
+        curve.make_smooth()  # Make the curve smooth
+        
+        # Add a label "C" to the curve
+        curve_label = MathTex("C", color=YELLOW, font_size=36)
+        curve_label.move_to(curve_point(t_max-1) + np.array([0.5, 0.3, 0]))
+        
+        # Create initial point P on the curve
+        initial_t = t_min + 3  # Start closer to the left edge
+        
+        # Create point P
+        point_p = Dot(curve_point(initial_t), color=WHITE)
+        point_p_label = MathTex("P", color=WHITE, font_size=36)
+        point_p_label.next_to(point_p, DOWN, buff=0.2)
+        
+        # Create tangent line
+        tangent_direction = curve_derivative(initial_t)
+        tangent_unit = tangent_direction / np.linalg.norm(tangent_direction)
+        tangent_length = 2  # Length of the tangent line
+        
+        tangent_line = Line(
+            start=curve_point(initial_t) - tangent_unit * tangent_length,
+            end=curve_point(initial_t) + tangent_unit * tangent_length,
+            color=BLUE,
+            stroke_width=2
+        )
+        
+        # Create right angle symbol
+        right_angle_size = 0.2
+        normal_dir = normal_vector(initial_t)
+        
+        ra_start = curve_point(initial_t) + right_angle_size * normal_dir
+        ra_corner = curve_point(initial_t)
+        ra_end = curve_point(initial_t) + right_angle_size * tangent_unit
+        
+        right_angle = VMobject(color=BLUE, stroke_width=2)
+        right_angle.set_points_as_corners([ra_start, ra_corner, ra_end])
+        
+        # Create radius line and circle
+        initial_radius = min(osculating_radius(initial_t), 5)
+        initial_center = osculating_center(initial_t)
+        
+        radius_line = Line(
+            start=curve_point(initial_t),
+            end=initial_center,
+            color=RED,
+            stroke_width=2
+        )
+        
+        radius_label = MathTex("R", color=RED, font_size=36)
+        radius_mid = (curve_point(initial_t) + initial_center) / 2
+        
+        # Position the label perpendicular to the radius line
+        radius_direction = initial_center - curve_point(initial_t)
+        if np.linalg.norm(radius_direction) > 0:
+            radius_dir_unit = radius_direction / np.linalg.norm(radius_direction)
+            radius_label.move_to(radius_mid + np.array([-radius_dir_unit[1], radius_dir_unit[0], 0]) * 0.3)
+        else:
+            radius_label.move_to(radius_mid + np.array([0.3, 0, 0]))
+        
+        osculating_circle = Circle(
+            radius=initial_radius,
+            color=WHITE,
+            stroke_width=2
+        )
+        osculating_circle.move_to(initial_center)
+        
+        # Show initial scene
+        self.play(
+            Create(curve),
+            Write(curve_label)
+        )
+        self.play(
+            Create(point_p),
+            Write(point_p_label),
+            Create(tangent_line),
+            Create(right_angle)
+        )
+        self.play(
+            Create(radius_line),
+            Write(radius_label),
+            Create(osculating_circle)
+        )
+        self.wait(1)
+        
+        # Remove tangent line and right angle for animation
+        self.play(
+            FadeOut(tangent_line),
+            FadeOut(right_angle)
+        )
+        self.wait(0.5)
+        
+        # Animation setup
+        animation_duration = 5  # seconds (adjustable)
+        num_animation_points = 60  # number of animation frames
+        
+        # Now starting from initial_t, going left to t_min, then right to t_max, then back to initial_t
+        t_values = []
+
+        # 1. From initial_t to t_min (going left)
+        points_left = num_animation_points // 4
+        t_values.extend(np.linspace(initial_t, t_min, points_left))
+
+        # 2. From t_min to t_max (going right)
+        points_right = num_animation_points // 2
+        t_values.extend(np.linspace(t_min, t_max, points_right))
+
+        # 3. From t_max back to initial_t (returning)
+        points_return = num_animation_points // 4
+        t_values.extend(np.linspace(t_max, initial_t, points_return))
+        
+        # Animate the circle moving along the curve
+        for t in t_values:
+            # Calculate new positions and sizes
+            current_point = curve_point(t)
+            current_radius = min(osculating_radius(t), 5)
+            current_center = osculating_center(t)
+            
+            # Create new objects at the updated positions
+            new_point = Dot(current_point, color=WHITE)
+            new_label = MathTex("P", color=WHITE, font_size=36).next_to(new_point, DOWN, buff=0.2)
+            
+            new_radius_line = Line(
+                start=current_point,
+                end=current_center,
+                color=RED,
+                stroke_width=2
+            )
+            
+            radius_mid = (current_point + current_center) / 2
+            new_radius_label = MathTex("R", color=RED, font_size=36)
+            
+            # Position the label perpendicular to the radius line
+            direction = current_center - current_point
+            if np.linalg.norm(direction) > 0:
+                dir_unit = direction / np.linalg.norm(direction)
+                new_radius_label.move_to(radius_mid + np.array([-dir_unit[1], dir_unit[0], 0]) * 0.3)
+            else:
+                new_radius_label.move_to(radius_mid + np.array([0.3, 0, 0]))
+            
+            new_circle = Circle(
+                radius=current_radius,
+                color=WHITE,
+                stroke_width=2
+            )
+            new_circle.move_to(current_center)
+            
+            # Animate the transition
+            self.play(
+                Transform(point_p, new_point),
+                Transform(point_p_label, new_label),
+                Transform(radius_line, new_radius_line),
+                Transform(radius_label, new_radius_label),
+                Transform(osculating_circle, new_circle),
+                run_time=animation_duration / len(t_values),
+                rate_func=linear
+            )
+        
+        # Pause at the final position
+        self.wait(1)
+        
+        # Continue with the rest of the implementation
+        # First, clean up the curvature demonstration
+        self.play(
+            FadeOut(curve),
+            FadeOut(curve_label),
+            FadeOut(point_p),
+            FadeOut(point_p_label),
+            FadeOut(radius_line),
+            FadeOut(radius_label),
+            FadeOut(osculating_circle),
+            FadeOut(curvature_formula),
+            FadeOut(curve_question_title)
+        )
+        self.wait(1)
+        
+        # --------- STEP 4: How does curvature relate to the beam? ---------
+        beam_curve_question_title = Tex("How is curvature related to beam displacement?", font_size=42)
+        beam_curve_question_title.to_edge(UP)
+        self.play(Write(beam_curve_question_title))
+        self.wait(1)
+        
+        # Add the Euler-Bernoulli equation with curvature term highlighted
+        euler_bernoulli_eq = MathTex(
+            r"\frac{d^2}{dx}\left(E(x)I(x)\frac{d^2w}{dx^2}\right) = q(x)",
+            font_size=40
+        )
+        
+        # Color the curvature term
+        euler_bernoulli_eq[0][14:21].set_color(YELLOW)  # Highlight d²w/dx²
+        
+        # Show the title and equations
+        self.play(Write(beam_curve_question_title))
+        self.wait(1)
+        
+        # Create the circle setup on the left side
+        # Define the radius and center of the circle
+        radius = 2.0
+        center = np.array([-3, 0, 0])  # Positioned on the left side
+        
+        # Create the circle
+        circle = Circle(
+            radius=radius,
+            color=YELLOW,
+            stroke_width=2
+        )
+        circle.move_to(center)
+        
+        # Create center point and label
+        center_dot = Dot(center, color=RED)
+        center_label = Tex("O", color=RED, font_size=30)
+        center_label.next_to(center_dot, UP+LEFT, buff=0.1)
+        
+        # Create radius line and label
+        radius_line = Line(
+            start=center,
+            end=center + np.array([0, -radius, 0]),  # Downward radius
+            color=RED,
+            stroke_width=2
+        )
+        radius_label = MathTex("R", color=RED, font_size=30)
+        radius_label.next_to(radius_line.get_center(), LEFT, buff=0.2)
+        
+        # Create tangent line (horizontal line at the bottom of the circle)
+        tangent_line = Line(
+            start=center + np.array([-radius - 1, -radius, 0]),
+            end=center + np.array([radius + 1, -radius, 0]),
+            color=BLUE,
+            stroke_width=2
+        )
+        
+        # Create point P where tangent line touches circle
+        point_p = Dot(center + np.array([0, -radius, 0]), color=BLUE)
+        point_p_label = MathTex("P", color=BLUE, font_size=30)
+        point_p_label.next_to(point_p, DOWN, buff=0.2)
+        
+        # Animate the creation of these elements
+        self.play(
+            Create(circle),
+            Create(center_dot),
+            Write(center_label),
+            run_time=1
+        )
+        self.play(
+            Create(radius_line),
+            Write(radius_label),
+            run_time=1
+        )
+        self.play(
+            Create(tangent_line),
+            Create(point_p),
+            Write(point_p_label),
+            run_time=1
+        )
+        self.wait(1)
+        
+        # Create and animate the 'w' arrow
+        # Function to create w arrow
+        def create_w_arrow(x):
+            """Create an arrow from tangent line to the circle at position x."""
+            # Calculate the y-coordinate (w) on the circle for this x-coordinate
+            w = -np.sqrt(radius**2 - x**2)+radius
+            
+            # Exact point on the circle
+            circle_point = center + np.array([x, -radius + w, 0])
+            
+            # Point on the tangent line directly below the circle point
+            tangent_point = center + np.array([x, -radius, 0])
+            
+            # Create an arrow from the tangent line to the circle point
+            return Arrow(
+                start=tangent_point,
+                end=circle_point,
+                color=WHITE,
+                buff=0,  # Ensure no space between arrow tip and circle
+                stroke_width=2,
+                max_tip_length_to_length_ratio=0.15  # Smaller tip
+            )
+        
+        # Initial position of the arrow at point P
+        initial_x = 0.5 * radius  # Start at 1/2 of the radius
+        initial_w_arrow = create_w_arrow(initial_x)
+        initial_w_label = MathTex("w", color=WHITE, font_size=30)
+        initial_w_label.next_to(initial_w_arrow, RIGHT, buff=0.1)
+        
+        self.play(
+            Create(initial_w_arrow),
+            Write(initial_w_label),
+            run_time=1
+        )
+        self.wait(1)
+        
+        # Animate the arrow moving along the x-axis
+        max_x = 0.95 * radius  # Maximum x value (3/4 of radius)
+        num_steps = 30  # Number of animation steps
+        
+        for i in range(1, num_steps + 1):
+            # Current x position
+            x = (max_x-initial_x) * i / num_steps + initial_x
+            
+            # Create new arrow at current position
+            new_w_arrow = create_w_arrow(x)
+            new_w_label = MathTex("w", color=WHITE, font_size=30)
+            new_w_label.next_to(new_w_arrow, RIGHT, buff=0.1)
+            
+            # Animate the transition
+            self.play(
+                Transform(initial_w_arrow, new_w_arrow),
+                Transform(initial_w_label, new_w_label),
+                run_time=1/num_steps,
+                rate_func=linear
+            )
+        
+        # Pause briefly at the final position
+        self.wait(1)
+        
+        # Create equations on the right side
+        # Create a VGroup for the equations
+        equations = VGroup()
+        
+        # Equation 1: Circle equation
+        eq1 = MathTex(r"x^2 + w^2 = R^2", font_size=36)
+        equations.add(eq1)
+        
+        # Equation 2: Solve for w
+        eq2 = MathTex(r"w = \sqrt{R^2 - x^2}", font_size=36)
+        equations.add(eq2)
+        
+        # Equation 3: First derivative
+        eq3 = MathTex(r"\frac{dw}{dx} = \frac{-x}{\sqrt{R^2 - x^2}}", font_size=36)
+        equations.add(eq3)
+        
+        # Equation 4: Second derivative
+        eq4 = MathTex(r"\frac{d^2w}{dx^2} = \frac{-R^2}{(R^2 - x^2)^{\frac{3}{2}}}", font_size=36)
+        equations.add(eq4)
+        
+        # Position equations on the right side of the screen, stacked vertically
+        # Position the equations in the top right corner
+        euler_bernoulli_eq.move_to(np.array([3, 2, 0]))  # Right side of screen
+        equations.arrange(DOWN, buff=0.5)
+        equations.move_to(np.array([3, 0, 0]))  # Right side of screen
+        
+        # Display equations sequentially
+        self.play(Write(eq1), run_time=1)
+        self.wait(1)
+        self.play(Write(eq2), run_time=1)
+        self.wait(1)
+        self.play(Write(eq3), run_time=1)
+        self.wait(1)
+        self.play(Write(eq4), run_time=1)
+        self.wait(1)
+        
+        # Evaluate the second derivative at x=0
+        # Create the substitution steps
+        eq5 = MathTex(r"\frac{d^2w}{dx^2} = \frac{-R^2}{(R^2 - 0)^{\frac{3}{2}}}", font_size=36)
+        eq5.move_to(eq4.get_center())
+        
+        eq6 = MathTex(r"\frac{d^2w}{dx^2} = \frac{-R^2}{R^3}", font_size=36)
+        eq6.move_to(eq4.get_center())
+        
+        eq7 = MathTex(r"\frac{d^2w}{dx^2} = \frac{-1}{R}", font_size=36)
+        eq7.move_to(eq4.get_center())
+        
+        # Animate the transitions
+        self.play(Transform(eq4, eq5), run_time=1)
+        self.wait(1)
+        self.play(Transform(eq4, eq6), run_time=1)
+        self.wait(1)
+        self.play(Transform(eq4, eq7), run_time=1)
+        self.wait(1)
+        
+        # Highlight the final result
+        # Create a copy of the final equation and highlight it
+        final_eq = MathTex(r"\frac{d^2w}{dx^2} = \frac{-1}{R}", font_size=48, color=YELLOW)
+        final_eq.move_to(eq4.get_center())
+        
+        self.play(
+            FadeOut(eq1),
+            FadeOut(eq2),
+            FadeOut(eq3),
+            Transform(eq4, final_eq),
+            Write(euler_bernoulli_eq),
+            run_time=1
+        )
+        
+        # Add a box around the final equation
+        box = SurroundingRectangle(final_eq, color=YELLOW, buff=0.2)
+        self.play(Create(box), run_time=1)
+        self.wait(2)
+        
+        # Clean up the circle and equations
+        self.play(
+            FadeOut(circle),
+            FadeOut(center_dot),
+            FadeOut(center_label),
+            FadeOut(radius_line),
+            FadeOut(radius_label),
+            FadeOut(tangent_line),
+            FadeOut(point_p),
+            FadeOut(point_p_label),
+            FadeOut(initial_w_arrow),
+            FadeOut(initial_w_label),
+            FadeOut(box),
+            FadeOut(eq4),
+            FadeOut(euler_bernoulli_eq),
+            run_time=1
+        )
+        self.wait(1)
+
+        # --------- STEP 5: Create beam ---------
+        # Beam dimensions and position
+        beam_length = 9
+        beam_height = 0.8
+        beam_center_y = -1  # Position lower on screen
+        # Determine beam endpoints
+        beam_left = -beam_length/2  # Centered horizontally
+        beam_right = beam_length/2
+        # Create fixed support at left end
+        fixed_support = Rectangle(
+            height=beam_height + 0.5,
+            width=0.8,
+            fill_color=BLUE,
+            fill_opacity=0.8,
+            color=BLUE,
+            stroke_width=2
+        )
+        fixed_support.move_to([beam_left - 0.4, beam_center_y, 0])
+        # Initial straight beam
+        straight_beam = Rectangle(
+            height=beam_height,
+            width=beam_length,
+            fill_color=WHITE,
+            fill_opacity=0.0,
+            color=WHITE,
+            stroke_width=2.5
+        )
+        straight_beam.move_to([0, beam_center_y, 0])  # Centered horizontally
+        # Initial neutral axis - solid yellow
+        neutral_axis = Line(
+            start=[beam_left, beam_center_y, 0],
+            end=[beam_right, beam_center_y, 0],
+            color=YELLOW,
+            stroke_width=3
+        )
+        # Show fixed support and beam with neutral axis
+        self.play(
+            Create(fixed_support),
+            Create(straight_beam),
+            Create(neutral_axis)
+        )
+        self.wait(1)
+
+        # --------- STEP 6: Show beam curvature ---------
+        # Generate deformed beam curve using provided function
+        deformed_points = get_cantilever_curve(
+            y_offset=0, 
+            max_deflection=1.2, 
+            beam_length=beam_length, 
+            beam_center_y=beam_center_y,  # Updated y position
+            beam_left=beam_left
+        )
+        
+        # Create deformed neutral axis
+        deformed_neutral = VMobject(color=YELLOW, stroke_width=3)
+        deformed_neutral.set_points_as_corners(deformed_points)
+        
+        # Create deformed beam (top and bottom curves)
+        top_points = []
+        bottom_points = []
+        
+        for point in deformed_points:
+            top_points.append([point[0], point[1] + beam_height/2, 0])
+            bottom_points.append([point[0], point[1] - beam_height/2, 0])
+        
+        # Create deformed beam top curve
+        deformed_top = VMobject(color=WHITE, stroke_width=2.5)
+        deformed_top.set_points_as_corners(top_points)
+        
+        # Create deformed beam bottom curve
+        deformed_bottom = VMobject(color=WHITE, stroke_width=2.5)
+        deformed_bottom.set_points_as_corners(bottom_points)
+        
+        # Add the right end of the beam
+        deformed_right = Line(
+            start=top_points[-1],
+            end=bottom_points[-1],
+            color=WHITE,
+            stroke_width=2.5
+        )
+        
+        # Group the deformed beam parts
+        deformed_beam = VGroup(deformed_top, deformed_bottom, deformed_right)
+        
+        # Animate the transition from straight to deformed beam with vertical shift
+        self.play(
+            FadeTransform(straight_beam, deformed_beam),
+            FadeTransform(neutral_axis, deformed_neutral)
+        )
+        self.wait(1)
+
+        # Calculate the midpoint position index
+        midpoint_index = len(deformed_points) // 2
+        
+        # Get the point at midpoint of beam on TOP surface
+        midpoint_top = top_points[midpoint_index]
+        
+        # Calculate the tangent at the midpoint using neighboring points for top surface
+        # Use a few points before and after to get a more accurate tangent
+        prev_index = midpoint_index - 5
+        next_index = midpoint_index + 5
+        prev_point_top = top_points[prev_index]
+        next_point_top = top_points[next_index]
+        
+        # Calculate the tangent slope at the midpoint
+        dx = next_point_top[0] - prev_point_top[0]
+        dy = next_point_top[1] - prev_point_top[1]
+        slope = dy / dx
+        
+        # Highlight the midpoint on the top surface
+        midpoint_dot = Dot(midpoint_top, color=RED)
+
+        # Calculate the tangent line slope accurately at midpoint
+        tangent_extension = 3.0  # Extended length for both sides
+        # Calculate extended tangent line endpoints
+        tangent_left = [
+            midpoint_top[0] - tangent_extension,
+            midpoint_top[1] - tangent_extension * slope,
+            0
+        ]
+        tangent_right = [
+            midpoint_top[0] + tangent_extension,
+            midpoint_top[1] + tangent_extension * slope,
+            0
+        ]   
+        # Create the tangent line properly passing through the midpoint
+        tangent_line = Line(
+            start=tangent_left,
+            end=tangent_right,
+            color=RED_E,
+            stroke_width=3
+        )
+        # Show the midpoint and tangent line
+        self.play(Create(midpoint_dot))
+        self.wait(0.5)
+        self.play(Create(tangent_line))
+        self.wait(0.5)
+
+        # Draw a circle with the radius perpendicular to the tangent line
+        # Calculate the prepindicular slope
+        perpendicular_slope = -1 / slope
+        # Create the radius line
+        radius_length = 1.5  # Length of the radius line
+        radius_start = midpoint_top
+        radius_end = [
+            midpoint_top[0] + radius_length * np.cos(np.arctan(perpendicular_slope)),
+            midpoint_top[1] + radius_length * np.sin(np.arctan(perpendicular_slope)),
+            0
+        ]
+        radius_line = Line(
+            start=radius_start,
+            end=radius_end,
+            color=RED,
+            stroke_width=2
+        )
+        # Create the circle around the radius_line
+        beam_circle = Circle(
+            radius=radius_length,
+            color=WHITE,
+            stroke_width=2
+        )
+        beam_circle.move_to(radius_end)
+
+        # Create a label for the radius
+        radius_label = MathTex("R", color=RED, font_size=36).next_to(radius_line, RIGHT, buff=0.2)
+        # Show the radius line and circle
+        self.play(Create(radius_line),
+                  Create(beam_circle),
+                  Write(radius_label))
+        self.wait(1)
+
+        self.play(
+            FadeOut(VGroup(
+                deformed_beam, deformed_neutral,fixed_support,beam_curve_question_title,
+                midpoint_dot, tangent_line, radius_line, beam_circle, radius_label
             ))
         )
         self.wait(1)

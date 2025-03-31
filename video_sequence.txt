@@ -7,10 +7,14 @@ IntroScene
 
 # Beam types and basic concepts
 BeamTypesScene
-BeamBendingBasics
 
 # Mathematical foundation
 BeamEquationsScene
+BeamSecondAreaWing
+BeamModulousElasticity
+BeamDistributedLoad
+BeamSlope
+BeamCurvature
 
 # Example and application
 BeamExampleScene
