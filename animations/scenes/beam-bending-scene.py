@@ -962,6 +962,7 @@ class BeamSecondAreaWing(ThreeDScene):
             r"q(x)",
             font_size=48
         )
+        equation.move_to(np.array([3, -1.5, 0]))
 
         # Get the I(x) part from the equation
         i_term = equation[3]  # This is the "I(x)" part
@@ -973,21 +974,23 @@ class BeamSecondAreaWing(ThreeDScene):
         explanation = Tex("Second Moment of Area can change with the beam.", font_size=32)
         
         # Add elements to group and arrange vertically
-        equation_group.add(equation,integral_eq, explanation)
+        equation_group.add(integral_eq, explanation)
         equation_group.arrange(DOWN, buff=1)
         
         # Position the group to exact coordinates
         # Adjust these values based on your specific needs
-        equation_group.move_to(np.array([3, 0.5, 0]))  # x=3 (right side), y=0.5 (slightly above center)
+        equation_group.move_to(np.array([3, 1.5, 0]))  # x=3 (right side), y=1.5 (slightly above center)
         
         # Add all elements as fixed to frame (important for 3D scenes)
         for element in equation_group:
             self.add_fixed_in_frame_mobjects(element)
         
+        self.play(Write(equation_group))
         # Create a bracket under the I(x) term
         bracket = Brace(i_term, direction=DOWN, color=YELLOW)
         
         # Create a label for the bracket
+        self.add_fixed_in_frame_mobjects(equation)
         label = Tex("Second Moment of Area", color=YELLOW)
         label.next_to(bracket, DOWN)
         self.play(i_term.animate.set_color(YELLOW))

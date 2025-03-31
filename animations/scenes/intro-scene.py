@@ -490,13 +490,14 @@ class BeamtoPlate(ThreeDScene):
         height_brace_group = VGroup(height_brace, height_brace_label)
         height_brace_group.move_to(np.array([3.7, 0.2, 0.2]))  # Position alongside height line
         height_brace_group.rotate(85 * DEGREES,axis=X_AXIS)  # Rotate to match 3D perspective
+        self.add_fixed_orientation_mobjects(height_brace_group)
 
         # Transition to rectangular beam
         self.play(
             ReplacementTransform(square_beam, rect_beam),
             ReplacementTransform(square_cross, rect_cross),
             ReplacementTransform(side_line, VGroup(width_line, height_line)),
-            ReplacementTransform(VGroup(side_brace,side_brace_label), VGroup(width_brace,width_brace_label, height_brace_group)),
+            ReplacementTransform(VGroup(side_brace,side_brace_label), VGroup(width_brace,width_brace_label)),
         )
         
         # Subtitle

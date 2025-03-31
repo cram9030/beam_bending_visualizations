@@ -50,7 +50,7 @@ jobs:
           ls -la media/videos/ || echo "media/videos directory not found"
           
           # Combine scenes into final 4K video
-          xvfb-run -a python scripts/combine-video-script.py --output teaching_demo_4k.mp4 --sequence video_sequence.txt --quality 4K60
+          xvfb-run -a python scripts/combine-video-script.py --output teaching_demo_4k.mp4 --sequence video_sequence.txt --quality 2160p60
           
           # Check if output file was created and where
           echo "Checking for output file:"
