@@ -47,7 +47,7 @@ jobs:
           xvfb-run -a python scripts/combine-video-script.py --output teaching_demo_4k.mp4 --sequence video_sequence.txt --quality 4K60
 
       - name: Upload rendered video
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: beam-bending-video
           path: teaching_demo_4k.mp4
