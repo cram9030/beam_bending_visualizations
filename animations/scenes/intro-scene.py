@@ -391,7 +391,7 @@ class BeamTypesScene(Scene):
         beam = VGroup(top_line, bottom_line, left_line, right_line, neutral_axis)
         return VGroup(beam, left_support, right_support)
 
-class BeamtoPlate(ThreeDScene):
+class BeamtoPlateScene(ThreeDScene):
     def construct(self):
         # Set up the camera orientation
         self.set_camera_orientation(phi=60 * DEGREES, theta=-60 * DEGREES, zoom=1.6)
@@ -504,7 +504,7 @@ class BeamtoPlate(ThreeDScene):
         plate_explanation = Tex(r"A beam must be modeled as a plate when a second axis gets involved. This is most commonly when there is a boundary condition on a second side.", font_size=36)
         plate_explanation.next_to(title, DOWN, buff=1)
 
-class Outro(Scene):
+class OutroScene(Scene):
     def construct(self):
         # Title
         title = Tex(r"What we have covered so far", font_size=48)

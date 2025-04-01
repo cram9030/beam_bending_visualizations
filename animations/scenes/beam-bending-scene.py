@@ -262,7 +262,7 @@ def get_cantilever_curve(y_offset=0, max_deflection=1.2, beam_length=9, beam_cen
         points.append([x, y, 0])
     return points
 
-class BeamBendingBasics(Scene):
+class BeamBendingBasicsScene(Scene):
     def construct(self):
         # Title
         title = Tex(r"Beam Bending Principles", font_size=48)
@@ -829,7 +829,7 @@ class BeamEquationsScene(Scene):
         )
         self.wait(1)
 
-class BeamSecondAreaWing(ThreeDScene):
+class BeamSecondAreaWingScene(ThreeDScene):
     def construct(self):
         # Step 1: Start with Euler-Bernoulli equation
         show_euler_bernoulli_equation(self)
@@ -1048,7 +1048,7 @@ class BeamSecondAreaWing(ThreeDScene):
         # Return the group in case you need to reference it later
         return equation_group
     
-class BeamModulousElasticity(ThreeDScene):
+class BeamModulousElasticityScene(ThreeDScene):
     def construct(self):
         # Step 1: Start with Euler-Bernoulli equation
         show_euler_bernoulli_equation(self)
@@ -1607,7 +1607,7 @@ def show_euler_bernoulli_equation(self):
     self.equation = equation
     self.title = title
 
-class BeamDistributedLoad(Scene):
+class BeamDistributedLoadScene(Scene):
     def construct(self):
         # --------- STEP 1: Title and equation first ---------
         show_euler_bernoulli_equation(self)
@@ -2093,7 +2093,7 @@ class BeamDistributedLoad(Scene):
         )
         self.wait(1)
 
-class BeamSlope(Scene):
+class BeamSlopeScene(Scene):
     def construct(self):
         # --------- STEP 1: Title and equation first ---------
         show_euler_bernoulli_equation(self)
