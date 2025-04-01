@@ -262,99 +262,6 @@ def get_cantilever_curve(y_offset=0, max_deflection=1.2, beam_length=9, beam_cen
         points.append([x, y, 0])
     return points
 
-class BeamBendingBasicsScene(Scene):
-    def construct(self):
-        # Title
-        title = Tex(r"Beam Bending Principles", font_size=48)
-        self.play(Write(title))
-        self.wait(1)
-        self.play(title.animate.to_edge(UP))
-        self.wait(1)
-        
-        # Create a straight beam
-        beam = Line([-5, 0, 0], [5, 0, 0], color=WHITE, stroke_width=3)
-        self.play(Create(beam))
-        self.wait(1)
-        
-        # Label the straight beam
-        straight_label = Tex(r"Straight Beam", font_size=24)
-        straight_label.next_to(beam, DOWN)
-        self.play(Write(straight_label))
-        self.wait(1)
-        
-        # Show applied load
-        load_arrow = Arrow([0, 2, 0], [0, 0.1, 0], buff=0, color=RED)
-        load_label = Tex(r"Applied Load (P)", font_size=20, color=RED)
-        load_label.next_to(load_arrow, UP)
-        
-        self.play(
-            Create(load_arrow),
-            Write(load_label)
-        )
-        self.wait(1)
-        
-        # Show beam bending under load
-        def get_curved_beam_points():
-            x_values = np.linspace(-5, 5, 100)
-            # Simple parabolic curve for bending - can be adjusted for different beam types
-            y_values = -0.5 * np.power(x_values/5, 2) + 0.5
-            return [[x, y, 0] for x, y in zip(x_values, y_values)]
-        
-        curved_points = get_curved_beam_points()
-        curved_beam = VMobject(color=WHITE, stroke_width=3)
-        curved_beam.set_points_as_corners(curved_points)
-        
-        self.play(
-            FadeTransform(beam, curved_beam),
-            FadeOut(straight_label)
-        )
-        self.wait(1)
-        
-        # Label the deformed beam
-        deformed_label = Tex(r"Deformed Beam", font_size=24)
-        deformed_label.next_to(curved_beam, DOWN)
-        self.play(Write(deformed_label))
-        self.wait(1)
-        
-        # Show neutral axis
-        neutral_axis = DashedLine([-5, 0, 0], [5, 0, 0], color=YELLOW)
-        neutral_label = Tex(r"Neutral Axis", font_size=20, color=YELLOW)
-        neutral_label.next_to(neutral_axis, UP).shift(LEFT*3)
-        
-        self.play(
-            Create(neutral_axis),
-            Write(neutral_label)
-        )
-        self.wait(1)
-        
-        # Show compression and tension zones
-        compression_arrow = Arrow([-3, 0.3, 0], [-3, 0.1, 0], buff=0, color=BLUE, stroke_width=2)
-        compression_label = Tex(r"Compression", font_size=16, color=BLUE)
-        compression_label.next_to(compression_arrow, UP)
-        
-        tension_arrow = Arrow([3, -0.3, 0], [3, -0.1, 0], buff=0, color=GREEN, stroke_width=2)
-        tension_label = Tex(r"Tension", font_size=16, color=GREEN)
-        tension_label.next_to(tension_arrow, DOWN)
-        
-        self.play(
-            Create(compression_arrow),
-            Write(compression_label),
-            Create(tension_arrow),
-            Write(tension_label)
-        )
-        self.wait(2)
-        
-        # Clean up and transition
-        self.play(
-            FadeOut(VGroup(
-                title, curved_beam, deformed_label, load_arrow, load_label,
-                neutral_axis, neutral_label, compression_arrow, compression_label,
-                tension_arrow, tension_label
-            ))
-        )
-        self.wait(1)
-
-
 class BeamEquationsScene(Scene):
     def construct(self):
         # --------- STEP 1: Title and equation first ---------
@@ -850,7 +757,19 @@ class BeamSecondAreaWingScene(ThreeDScene):
         self.rearrange_elements(wing, sections)
         
         # Step 6: Fade out wing and show the integral equation
-        self.show_final_equation(wing)
+        equations = self.show_final_equation(wing)
+
+        self.play(
+            FadeOut(sections[0]),
+            FadeOut(sections[1]),
+            FadeOut(sections[2]),
+            FadeOut(equations),
+            FadeOut(self.wing_title),
+            FadeOut(self.wing_span_arrow),
+            FadeOut(self.root_label),
+            FadeOut(self.tip_label),
+            FadeOut(self.x_label)
+        )
     
     def highlight_second_moment(self):
         """Highlight the I(x) term and label it as the Second Moment of Area."""
@@ -1016,7 +935,7 @@ class BeamSecondAreaWingScene(ThreeDScene):
         
         # Create explanatory text
         explanation = Tex("Second Moment of Area can change with the beam.", font_size=32)
-        
+
         # Add elements to group and arrange vertically
         equation_group.add(integral_eq, explanation)
         equation_group.arrange(DOWN, buff=1)
@@ -1025,11 +944,13 @@ class BeamSecondAreaWingScene(ThreeDScene):
         # Adjust these values based on your specific needs
         equation_group.move_to(np.array([3, 1.5, 0]))  # x=3 (right side), y=1.5 (slightly above center)
         
-        # Add all elements as fixed to frame (important for 3D scenes)
-        for element in equation_group:
-            self.add_fixed_in_frame_mobjects(element)
-        
-        self.play(Write(equation_group))
+        self.add_fixed_in_frame_mobjects(integral_eq) 
+        self.play(Write(integral_eq),run_time = 2)
+        self.wait(8)
+        explanation.next_to(integral_eq, DOWN, buff=0.5)  # buff controls the space between objects
+        self.add_fixed_in_frame_mobjects(explanation) 
+        self.play(Write(explanation),run_time = 2)
+        self.wait(6)
         # Create a bracket under the I(x) term
         bracket = Brace(i_term, direction=DOWN, color=YELLOW)
         
@@ -1044,6 +965,11 @@ class BeamSecondAreaWingScene(ThreeDScene):
             GrowFromCenter(bracket),
             Write(label)
         )
+
+        self.wait(2)
+
+        # Add elements to group and arrange vertically
+        equation_group.add(integral_eq, explanation,label,bracket,equation)
         
         # Return the group in case you need to reference it later
         return equation_group
@@ -1070,21 +996,33 @@ class BeamModulousElasticityScene(ThreeDScene):
         self.add_fixed_in_frame_mobjects(cross_section)
         cross_section_label = Tex("Root Cross-Section", font_size=40)
         self.play(Indicate(sections[0], scale_factor=1.5),
-            Create(cross_section.shift(np.array([-3, 1, 0]))))
-        self.wait(0.5)
+            Create(cross_section.shift(np.array([-3, 1, 0]))),
+            run_time = 5)
         cross_section_label.next_to(cross_section, UP, buff=0.5)
         self.add_fixed_in_frame_mobjects(cross_section_label)
         self.play(Write(cross_section_label))
+        self.wait(3.5)
         # Step 5: Show the airfoil cross-section
         tip_section = self.create_tip_cross_section(scale_factor=1.0, num_cutouts=8)
         self.add_fixed_in_frame_mobjects(tip_section)
         tip_section_label = Tex("Tip Cross-Section", font_size=40)
         self.play(Indicate(sections[1], scale_factor=1.5),
-            Create(tip_section.shift(np.array([-3, -2, 0]))))
+            Create(tip_section.shift(np.array([-3, -2, 0]))),
+            run_time = 5)
         tip_section_label.next_to(tip_section, UP, buff=0.5)
         self.add_fixed_in_frame_mobjects(tip_section_label)
         self.play(Write(tip_section_label))
-        self.wait(2)
+        self.wait(3.5)
+
+        self.play(
+            FadeOut(cross_section),
+            FadeOut(cross_section_label),
+            FadeOut(tip_section),
+            FadeOut(tip_section_label),
+            FadeOut(wing),
+            FadeOut(self.wing_title),
+            FadeOut(sections[0],sections[1])
+        )
 
     def animate_wing_creation(self, wing):
         """Animate the wing creation from top view."""
@@ -1209,9 +1147,9 @@ class BeamModulousElasticityScene(ThreeDScene):
         self.play(
             Write(new_title),
             Create(cross_section),
-            run_time=2.5
+            run_time=5
         )
-        self.wait(1)
+        self.wait(4)
         
         # Add an explanation about material variations
         explanation = Tex("Different materials affect the stiffness of the wing structure")
@@ -2389,7 +2327,7 @@ class BeamSlopeScene(Scene):
         )
         self.wait(1)
 
-class BeamCurvature(Scene):
+class BeamCurvatureScene(Scene):
     def construct(self):
         # --------- STEP 1: Title and equation first ---------
         show_euler_bernoulli_equation(self)

@@ -9,15 +9,15 @@ BeamIntroductionScene
 
 # Beam types and basic concepts
 BeamTypesScene
-BeamtoPlate
+BeamtoPlateScene
 
 #Intro to Modeling Transition
-Outro
+OutroScene
 
 # Mathematical foundation
 BeamEquationsScene
-BeamSecondAreaWing
-BeamModulousElasticity
-BeamDistributedLoad
-BeamSlope
-BeamCurvature
+BeamSecondAreaWingScene
+BeamModulousElasticityScene
+BeamDistributedLoadScene
+BeamSlopeScene
+BeamCurvatureScene
