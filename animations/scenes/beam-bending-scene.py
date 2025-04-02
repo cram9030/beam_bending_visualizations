@@ -1567,16 +1567,16 @@ class BeamDistributedLoadScene(Scene):
             GrowFromCenter(bracket),
             Write(label)
         )
-        self.wait(1)
+        self.wait(4)
         
         # --------- STEP 3: Create beam ---------
         # Beam dimensions and position
         beam_length = 9
         beam_height = 0.8
-        beam_center_y = -1  # Center of beam vertically on screen
+        beam_center_y = -0.35  # Center of beam vertically on screen
         
         # Determine beam endpoints
-        beam_left = -6  # Left edge of beam
+        beam_left = -5  # Left edge of beam
         beam_right = beam_left + beam_length
         
         # Create fixed support at left end
@@ -1608,14 +1608,7 @@ class BeamDistributedLoadScene(Scene):
             color=YELLOW,
             stroke_width=3
         )
-        
-        # Show fixed support and beam with neutral axis
-        self.play(
-            Create(fixed_support),
-            Create(straight_beam),
-            Create(neutral_axis)
-        )
-        self.wait(1)
+
         # Fade out the title and equation
         self.play(
             FadeOut(self.title),
@@ -1624,6 +1617,15 @@ class BeamDistributedLoadScene(Scene):
             FadeOut(bracket)
         )
         self.wait(0.5)
+        
+        # Show fixed support and beam with neutral axis
+        self.play(
+            Create(fixed_support),
+            Create(straight_beam),
+            Create(neutral_axis),
+            run_time = 2
+        )
+        self.wait(3)
         
         # --------- STEP 4: Load Case 1 - Uniform Load ---------
         case1_title = Tex("Case 1: Uniform Load", color=RED, font_size=36)
@@ -1868,7 +1870,7 @@ class BeamDistributedLoadScene(Scene):
             r"q(x) = \begin{cases} 0 & x < a \\ q_0 & a \leq x \leq b \\ 0 & x > b \end{cases}",
             font_size=32
         )
-        middle_math.next_to(case2_title, DOWN, buff=0.5).shift(RIGHT * 2)
+        middle_math.next_to(case2_title, DOWN, buff=0.5).shift(RIGHT * 4)
         
         # Animate the deflection
         self.play(Write(middle_math))
@@ -1876,7 +1878,7 @@ class BeamDistributedLoadScene(Scene):
             FadeTransform(straight_neutral, middle_deflected_neutral),
             FadeTransform(new_straight_beam, middle_deflected_beam)
         )
-        self.wait(2)
+        self.wait(3)
         
         # --------- STEP 7: Transition back to straight beam again ---------
         # Remove previous load and restore straight beam
@@ -1912,22 +1914,54 @@ class BeamDistributedLoadScene(Scene):
         )
         self.wait(1)
         
-        # --------- STEP 8: Load Case 3 - Wind Lifting Distribution ---------
-        case3_title = Tex("Case 3: Wing Lifting Distribution", color=RED, font_size=36)
+        def get_elliptical_load_curve():
+            """Generate points for a beam deflection under elliptical loading.
+            For a cantilever beam with elliptical loading (maximum at root).
+            """
+            points = []
+            num_points = 100
+            
+            for i in range(num_points + 1):
+                x_ratio = i / num_points
+                x = beam_right - x_ratio * beam_length
+                
+                # For a cantilever with elliptical loading (maximum at root)
+                # The loading follows sqrt(1 - (x/L)²) pattern
+                # The deflection is more complex but can be approximated
+                L = beam_length
+                rel_x = x_ratio * L
+                
+                # The deflection follows approximately a 4th order polynomial
+                # with maximum deflection at the tip
+                # Scaled to make the visualization clear
+                deflection_factor = 1.05
+                deflection = deflection_factor * (1 - x_ratio) * (1 - x_ratio) * (3 - x_ratio)
+                
+                y = beam_center_y + deflection
+                points.append([x, y, 0])
+            
+            return points
+
+        # --------- STEP 8: Load Case 3 - Elliptical Lifting Distribution ---------
+        case3_title = Tex("Case 3: Elliptical Lifting Distribution", color=RED, font_size=36)
         case3_title.to_edge(UP)  # Move to center top
         self.play(Write(case3_title))
-        
-        # Create wind lifting distribution (linearly increasing from left to right)
-        wind_arrows = VGroup()
+        self.wait(1)
+
+        # Create elliptical lifting distribution (maximum at root, decreasing to tip)
+        elliptical_arrows = VGroup()
         num_arrows = 12
-        max_arrow_length = 1
-        
+        max_arrow_length = 1.0  # Slightly larger to make the effect more visible
+
         for i in range(num_arrows):
             x_pos = beam_left + beam_length * (i + 0.5) / num_arrows
-            # Arrow length increases linearly from left to right
-            arrow_length = max_arrow_length * (i + 1) / num_arrows
+            x_relative = (i + 0.5) / num_arrows  # Position from 0 to 1
             
-            # Changed direction of arrows to point DOWNWARD (from below the beam)
+            # Calculate arrow length based on elliptical distribution
+            # sqrt(1 - x²) gives the classic elliptical shape
+            arrow_length = max_arrow_length * np.sqrt(1 - x_relative**2)
+            
+            # Arrows pointing DOWNWARD (from below the beam)
             arrow = Arrow(
                 start=[x_pos, beam_center_y - beam_height/2 - arrow_length, 0],
                 end=[x_pos, beam_center_y - beam_height/2, 0],
@@ -1936,97 +1970,66 @@ class BeamDistributedLoadScene(Scene):
                 stroke_width=2,
                 max_tip_length_to_length_ratio=0.15
             )
-            wind_arrows.add(arrow)
-        
+            elliptical_arrows.add(arrow)
+
         # Add a bracket below arrows with q(x) label
-        # Moved bracket above arrows to avoid pushing label off screen
-        wind_bracket = Brace(wind_arrows, direction=DOWN, color=RED)
-        wind_label = MathTex("q(x) = q_0 \\frac{x}{L}", color=RED)
-        wind_label.next_to(wind_bracket, DOWN, buff=0.2)  # Reduced buffer to keep on screen
-        
-        # Show the wind load
+        elliptical_bracket = Brace(elliptical_arrows, direction=DOWN, color=RED)
+        elliptical_label = MathTex(r"q(x) = q_0 \sqrt{1 - \left(\frac{x}{L}\right)^2}", color=RED)
+        elliptical_label.next_to(elliptical_bracket, DOWN, buff=0.2)
+
+        # Show the elliptical load
         self.play(
-            Create(wind_arrows),
-            Create(wind_bracket),
-            Write(wind_label)
+            Create(elliptical_arrows),
+            Create(elliptical_bracket),
+            Write(elliptical_label)
         )
         self.wait(1)
-        
-        # Create deflection curve for wind lifting distribution
-        def get_wind_lift_curve():
-            points = []
-            num_points = 100
-            
-            for i in range(num_points + 1):
-                x_ratio = i / num_points
-                x = beam_left + x_ratio * beam_length
-                
-                # For a cantilever with linearly increasing upward load
-                # Deflection is upward (positive) and approximately follows a 5th order polynomial
-                L = beam_length
-                rel_x = x_ratio * L
-                
-                # Simplified approximation for upward deflection with linearly increasing load
-                deflection = 1.2 * (rel_x/L)**3 * (10 - 10*(rel_x/L) + 3*(rel_x/L)**2)
-                
-                y = beam_center_y + deflection
-                points.append([x, y, 0])
-            
-            return points
-        
-        # Create deflected beam for wind lifting
-        wind_points = get_wind_lift_curve()
-        
+
+        # Create deflection curve for elliptical lifting distribution
+        elliptical_points = get_elliptical_load_curve()
+
         # Create deflected neutral axis
-        wind_deflected_neutral = VMobject(color=YELLOW, stroke_width=3)
-        wind_deflected_neutral.set_points_as_corners(wind_points)
-        
+        elliptical_deflected_neutral = VMobject(color=YELLOW, stroke_width=3)
+        elliptical_deflected_neutral.set_points_as_corners(elliptical_points)
+
         # Create deflected beam (top and bottom curves)
-        wind_top_points = []
-        wind_bottom_points = []
-        
-        for point in wind_points:
-            wind_top_points.append([point[0], point[1] + beam_height/2, 0])
-            wind_bottom_points.append([point[0], point[1] - beam_height/2, 0])
-        
+        elliptical_top_points = []
+        elliptical_bottom_points = []
+
+        for point in elliptical_points:
+            elliptical_top_points.append([point[0], point[1] + beam_height/2, 0])
+            elliptical_bottom_points.append([point[0], point[1] - beam_height/2, 0])
+
         # Add the right end of the beam
-        wind_right_end = Line(
-            start=wind_top_points[-1],
-            end=wind_bottom_points[-1],
+        elliptical_right_end = Line(
+            start=elliptical_top_points[0],
+            end=elliptical_bottom_points[0],
             color=WHITE,
             stroke_width=2.5
         )
-        
+
         # Create deflected beam curves
-        wind_top_curve = VMobject(color=WHITE, stroke_width=2.5)
-        wind_top_curve.set_points_as_corners(wind_top_points)
-        
-        wind_bottom_curve = VMobject(color=WHITE, stroke_width=2.5)
-        wind_bottom_curve.set_points_as_corners(wind_bottom_points)
-        
-        wind_deflected_beam = VGroup(wind_top_curve, wind_bottom_curve, wind_right_end)
-        
-        # Mathematical explanation
-        wind_math = MathTex(
-            r"q(x) = q_0 \frac{x}{L}",
-            font_size=32
-        )
-        wind_math.next_to(case3_title, DOWN, buff=0.5)
-        
+        elliptical_top_curve = VMobject(color=WHITE, stroke_width=2.5)
+        elliptical_top_curve.set_points_as_corners(elliptical_top_points)
+
+        elliptical_bottom_curve = VMobject(color=WHITE, stroke_width=2.5)
+        elliptical_bottom_curve.set_points_as_corners(elliptical_bottom_points)
+
+        elliptical_deflected_beam = VGroup(elliptical_top_curve, elliptical_bottom_curve, elliptical_right_end)
+
         # Animate the deflection
-        self.play(Write(wind_math))
         self.play(
-            FadeTransform(another_straight_neutral, wind_deflected_neutral),
-            FadeTransform(another_straight_beam, wind_deflected_beam)
+            FadeTransform(another_straight_neutral, elliptical_deflected_neutral),
+            FadeTransform(another_straight_beam, elliptical_deflected_beam)
         )
         self.wait(2)
-        
+
         # Clean up and finish
         self.play(
             FadeOut(VGroup(
                 fixed_support,
-                wind_arrows, wind_bracket, wind_label, wind_math, case3_title,
-                wind_deflected_neutral, wind_deflected_beam
+                elliptical_arrows, elliptical_bracket, elliptical_label, case3_title,
+                elliptical_deflected_neutral, elliptical_deflected_beam
             ))
         )
         self.wait(1)
