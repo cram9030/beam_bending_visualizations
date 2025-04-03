@@ -2053,7 +2053,7 @@ class BeamSlopeScene(Scene):
             GrowFromCenter(bracket),
             Write(label)
         )
-        self.wait(1)
+        self.wait(2)
         
         # --------- STEP 3: Create beam ---------
         # Beam dimensions and position
@@ -2109,9 +2109,10 @@ class BeamSlopeScene(Scene):
             FadeOut(self.equation),
             FadeOut(bracket),
             FadeOut(label),
-            Write(beam_slope_title)
+            Write(beam_slope_title),
+            run_time = 2
         )
-        self.wait(1)
+        self.wait(3)
         
         # Transition beam upward by 0.5
         new_beam_center_y = beam_center_y + 0.5
@@ -2286,9 +2287,10 @@ class BeamSlopeScene(Scene):
             Create(angle_arc),
             Write(dw_label),
             Write(dx_label),
-            Write(theta_label)
+            Write(theta_label),
+            run_time = 5
         )
-        self.wait(1)
+        self.wait(4)
         
         # Create the slope equation
         slope_eq = MathTex(
@@ -2298,8 +2300,9 @@ class BeamSlopeScene(Scene):
         slope_eq.next_to(beam_slope_title, DOWN, buff=0.5)
         
         # Show the slope equation
-        self.play(Write(slope_eq))
-        self.wait(1.5)
+        self.play(Write(slope_eq),
+                  run_time = 2)
+        self.wait(2)
         
         # Create the small angle approximation equation
         small_angle_eq = MathTex(
@@ -2315,9 +2318,10 @@ class BeamSlopeScene(Scene):
         # Transition to small angle approximation
         self.play(
             ReplacementTransform(slope_eq, small_angle_eq),
-            ReplacementTransform(beam_slope_title, beam_angle_title)
+            ReplacementTransform(beam_slope_title, beam_angle_title),
+            run_time = 2
         )
-        self.wait(2)
+        self.wait(4)
         
         # Optional cleanup
         self.play(
@@ -2347,7 +2351,8 @@ class BeamCurvatureScene(Scene):
         self.play(
             w_term.animate.set_color(YELLOW),
             GrowFromCenter(bracket),
-            Write(label)
+            Write(label),
+            run_time = 0.5
         )
         self.wait(1)
 
@@ -2362,12 +2367,6 @@ class BeamCurvatureScene(Scene):
             FadeOut(label),
             Write(curve_question_title)
         )
-        self.wait(1)
-        
-        # Add the curvature formula
-        curvature_formula = MathTex(r"\kappa = \frac{1}{R}", font_size=36)
-        curvature_formula.next_to(curve_question_title, DOWN, buff=0.5)
-        self.play(Write(curvature_formula))
         self.wait(1)
         
         # Define the parametric curve parameters (4th order polynomial)
@@ -2522,6 +2521,7 @@ class BeamCurvatureScene(Scene):
             Create(curve),
             Write(curve_label)
         )
+        self.wait(1)
         self.play(
             Create(point_p),
             Write(point_p_label),
@@ -2533,6 +2533,12 @@ class BeamCurvatureScene(Scene):
             Write(radius_label),
             Create(osculating_circle)
         )
+        self.wait(1)
+
+        # Add the curvature formula
+        curvature_formula = MathTex(r"\kappa = \frac{1}{R}", font_size=36)
+        curvature_formula.next_to(curve_question_title, DOWN, buff=0.5)
+        self.play(Write(curvature_formula))
         self.wait(1)
         
         # Remove tangent line and right angle for animation
@@ -2640,10 +2646,6 @@ class BeamCurvatureScene(Scene):
         
         # Color the curvature term
         euler_bernoulli_eq[0][14:21].set_color(YELLOW)  # Highlight d²w/dx²
-        
-        # Show the title and equations
-        self.play(Write(beam_curve_question_title))
-        self.wait(1)
         
         # Create the circle setup on the left side
         # Define the radius and center of the circle
