@@ -2524,22 +2524,24 @@ class BeamCurvatureScene(Scene):
         self.wait(1)
         self.play(
             Create(point_p),
-            Write(point_p_label),
-            Create(tangent_line),
-            Create(right_angle)
+            Write(point_p_label)
         )
+        self.wait(1)
+        self.play(Create(tangent_line))
+        self.wait(0.5)
         self.play(
             Create(radius_line),
             Write(radius_label),
             Create(osculating_circle)
         )
-        self.wait(1)
+        self.wait(5)
 
         # Add the curvature formula
         curvature_formula = MathTex(r"\kappa = \frac{1}{R}", font_size=36)
         curvature_formula.next_to(curve_question_title, DOWN, buff=0.5)
-        self.play(Write(curvature_formula))
-        self.wait(1)
+        self.play(Write(curvature_formula),
+                  run_time = 4)
+        self.wait(8)
         
         # Remove tangent line and right angle for animation
         self.play(
@@ -2549,7 +2551,7 @@ class BeamCurvatureScene(Scene):
         self.wait(0.5)
         
         # Animation setup
-        animation_duration = 5  # seconds (adjustable)
+        animation_duration = 12  # seconds (adjustable)
         num_animation_points = 60  # number of animation frames
         
         # Now starting from initial_t, going left to t_min, then right to t_max, then back to initial_t
@@ -2704,10 +2706,10 @@ class BeamCurvatureScene(Scene):
             Create(tangent_line),
             Create(point_p),
             Write(point_p_label),
-            run_time=1
+            run_time=2
         )
-        self.wait(1)
-        
+        self.wait(2)
+    
         # Create and animate the 'w' arrow
         # Function to create w arrow
         def create_w_arrow(x):
@@ -2740,9 +2742,9 @@ class BeamCurvatureScene(Scene):
         self.play(
             Create(initial_w_arrow),
             Write(initial_w_label),
-            run_time=1
+            run_time=2
         )
-        self.wait(1)
+        self.wait(2)
         
         # Animate the arrow moving along the x-axis
         max_x = 0.95 * radius  # Maximum x value (3/4 of radius)
@@ -2761,7 +2763,7 @@ class BeamCurvatureScene(Scene):
             self.play(
                 Transform(initial_w_arrow, new_w_arrow),
                 Transform(initial_w_label, new_w_label),
-                run_time=1/num_steps,
+                run_time=4/num_steps,
                 rate_func=linear
             )
         
@@ -2773,9 +2775,16 @@ class BeamCurvatureScene(Scene):
         equations = VGroup()
         
         # Equation 1: Circle equation
-        eq1 = MathTex(r"x^2 + w^2 = R^2", font_size=36)
+        eq1 = MathTex(r"(x-h)^2 + (w-k)^2 = R^2", font_size=36)
         equations.add(eq1)
-        
+
+        # Assume h and k are 0 for simplicity
+        # Equation 1: Circle equation simplified
+        h_eq = MathTex(r"h = 0", font_size=36)
+        equations.add(h_eq)
+        eq1_simplified = MathTex(r"x^2 + (w-k)^2 = R^2", font_size=36)
+        equations.add(eq1_simplified)
+
         # Equation 2: Solve for w
         eq2 = MathTex(r"w = \sqrt{R^2 - x^2}", font_size=36)
         equations.add(eq2)
@@ -2795,12 +2804,16 @@ class BeamCurvatureScene(Scene):
         equations.move_to(np.array([3, 0, 0]))  # Right side of screen
         
         # Display equations sequentially
-        self.play(Write(eq1), run_time=1)
+        self.play(Write(eq1), run_time=2)
+        self.wait(6)
+        self.play(Write(h_eq), run_time=2)
+        self.wait(2)
+        self.play(Write(eq1_simplified), run_time=1)
         self.wait(1)
-        self.play(Write(eq2), run_time=1)
-        self.wait(1)
-        self.play(Write(eq3), run_time=1)
-        self.wait(1)
+        self.play(Write(eq2), run_time=2)
+        self.wait(2)
+        self.play(Write(eq3), run_time=2)
+        self.wait(4)
         self.play(Write(eq4), run_time=1)
         self.wait(1)
         
@@ -2816,12 +2829,12 @@ class BeamCurvatureScene(Scene):
         eq7.move_to(eq4.get_center())
         
         # Animate the transitions
-        self.play(Transform(eq4, eq5), run_time=1)
-        self.wait(1)
-        self.play(Transform(eq4, eq6), run_time=1)
-        self.wait(1)
-        self.play(Transform(eq4, eq7), run_time=1)
-        self.wait(1)
+        self.play(Transform(eq4, eq5), run_time=2)
+        self.wait(2)
+        self.play(Transform(eq4, eq6), run_time=2)
+        self.wait(2)
+        self.play(Transform(eq4, eq7), run_time=2)
+        self.wait(2)
         
         # Highlight the final result
         # Create a copy of the final equation and highlight it
@@ -2832,6 +2845,8 @@ class BeamCurvatureScene(Scene):
             FadeOut(eq1),
             FadeOut(eq2),
             FadeOut(eq3),
+            FadeOut(h_eq),
+            FadeOut(eq1_simplified),
             Transform(eq4, final_eq),
             Write(euler_bernoulli_eq),
             run_time=1
