@@ -66,7 +66,7 @@ Quality options:
 To render all animations:
 
 ```bash
-python3 scripts/render_all.py -qm
+python3 scripts/render-all-script.py -qm
 ```
 
 ### Create Final Video

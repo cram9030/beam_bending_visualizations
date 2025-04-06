@@ -9,10 +9,9 @@ BeamIntroductionScene
 
 # Beam types and basic concepts
 BeamTypesScene
-BeamtoPlateScene
-
-#Intro to Modeling Transition
-OutroScene
+BeamtoBoxScene
+BeamTwoAxisScene
+BeamThicknessScene
 
 # Mathematical foundation
 BeamEquationsScene
