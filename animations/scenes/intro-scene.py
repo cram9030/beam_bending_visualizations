@@ -539,14 +539,14 @@ class BeamtoBoxScene(ThreeDScene):
         is_useful_beam = Tex(r"Is it useful to model this as a beam?", font_size=48)
         is_useful_beam.to_edge(UP)
         self.add_fixed_in_frame_mobjects(is_useful_beam)
+        self.play(ReplacementTransform(is_beam,is_useful_beam))
 
         self.wait(7)
 
         # 4 George Box quote
         # Create the George Box quote with detailed line art image
         self.play(
-            FadeOut(short_beam),
-            FadeOut(is_beam))
+            FadeOut(short_beam))
         box_quote_group = self.show_box_quote_detailed()
         self.wait(3.5)
         self.play(FadeOut(box_quote_group))
@@ -759,7 +759,8 @@ class BeamTwoAxisScene(ThreeDScene):
         forces_title = Tex(r"Forces on Two Axis", font_size=48)
         forces_title.to_edge(UP)
         self.add_fixed_in_frame_mobjects(forces_title)
-        self.play(FadeIn(forces_title),run_time = 11)
+        self.play(ReplacementTransform(boundary_title,forces_title), run_time = 1)
+        self.wait(10)
 
         # Fade out the rectangular beam and boundaries
         self.play(
@@ -768,8 +769,6 @@ class BeamTwoAxisScene(ThreeDScene):
             FadeOut(bot_root),
             FadeOut(top_side),
             FadeOut(bot_side),
-            FadeOut(boundary_title),
-            FadeIn(forces_title)
         )
         self.wait(1)
 

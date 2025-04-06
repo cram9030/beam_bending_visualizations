@@ -277,7 +277,7 @@ class BeamEquationsScene(Scene):
         )
         eq.next_to(title, DOWN, buff=0.75)
         self.play(Write(eq),run_time = 5)
-        self.wait(5)
+        self.wait(1)
         
         # --------- STEP 2: Create initial straight beam ---------
         # Beam dimensions and position
@@ -340,7 +340,7 @@ class BeamEquationsScene(Scene):
             Create(straight_beam),
             Create(neutral_axis)
         )
-        self.wait(1)
+        self.wait(4)
         
         # --------- STEP 3: Add axes far away from beam ---------
         # Create axes - positioned FAR left
@@ -359,7 +359,7 @@ class BeamEquationsScene(Scene):
             Create(z_axis),
             Write(z_label)
         )
-        self.wait(0.5)
+        self.wait(6)
         
         # --------- STEP 4: Pulse x-axis and add "Coordinate Direction" ---------
         # Create "Coordinate Direction" text
@@ -398,7 +398,7 @@ class BeamEquationsScene(Scene):
         
         # Repeat pulse one more time
         self.play(x_axis_pulse,
-                  run_time = 2)
+                  run_time = 3)
         self.wait(3)
         
         # --------- STEP 5: Transition to deformed beam ---------
@@ -2786,7 +2786,7 @@ class BeamCurvatureScene(Scene):
         equations.add(eq1_simplified)
 
         # Equation 2: Solve for w
-        eq2 = MathTex(r"w = \sqrt{R^2 - x^2}", font_size=36)
+        eq2 = MathTex(r"w = \sqrt{R^2 - x^2} + k", font_size=36)
         equations.add(eq2)
         
         # Equation 3: First derivative
