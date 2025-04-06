@@ -539,7 +539,7 @@ class BeamtoBoxScene(ThreeDScene):
         is_useful_beam = Tex(r"Is it useful to model this as a beam?", font_size=48)
         is_useful_beam.to_edge(UP)
         self.add_fixed_in_frame_mobjects(is_useful_beam)
-        self.play(ReplacementTransform(is_beam,is_useful_beam))
+        self.play(FadeOut(is_beam),FadeIn(is_useful_beam))
 
         self.wait(7)
 
@@ -795,10 +795,11 @@ class BeamTwoAxisScene(ThreeDScene):
         self.add_fixed_orientation_mobjects(load_label)
         self.play(
             Create(load_arrows),
-            Write(load_label)
+            Write(load_label),
+            runt_time = 2
         )
         
-        self.wait(2)
+        self.wait(4)
         # Fade out the load arrows and brace
         self.play(
             FadeOut(load_arrows),
@@ -1088,7 +1089,7 @@ class BeamThicknessScene(ThreeDScene):
 class OutroScene(Scene):
     def construct(self):
         # Title
-        title = Tex(r"What we have covered so far", font_size=48)
+        title = Tex(r"What we have covered?", font_size=48)
         title.to_edge(UP)
         self.play(Write(title), run_time=1.5)
 
@@ -1108,4 +1109,4 @@ class OutroScene(Scene):
         self.wait(1)
         
         # Transition out
-        self.play(FadeOut(title), FadeOut(*summary_points), run_time=2)
+        self.play(FadeOut(title), FadeOut(*summary_points))
